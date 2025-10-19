@@ -1,0 +1,272 @@
+package pl.lodz.p;
+
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+
+
+class GameOfLifeBoardTest {
+
+    @Test
+    void constructorSizeBoardTestHeightShouldBe4WidthShouldBe8() {
+        GameOfLifeBoard board = new GameOfLifeBoard(4,8);
+
+        boolean[][] testingBoard = board.getBoard();
+        assertEquals(4, testingBoard.length);
+        assertEquals(8, testingBoard[0].length);
+
+    }
+
+    @Test
+    void anotherConstructorCallGeneratesDifferentCellsOnBoard() {
+        GameOfLifeBoard firstBoard = new GameOfLifeBoard(8,8);
+        GameOfLifeBoard secondBoard = new GameOfLifeBoard(8,8);
+
+        assertFalse(Arrays.deepEquals(firstBoard.getBoard(),secondBoard.getBoard()));
+
+    }
+
+    @Test
+    void getBoardTest() {
+        GameOfLifeBoard game = new GameOfLifeBoard(8,8);
+        boolean[][] board = {{true,false,true}, {false, false, true},
+                {false, false, false}};
+        assertFalse(Arrays.deepEquals(game.getBoard(), board));
+        game.setBoard(board);
+        assertTrue(Arrays.deepEquals(game.getBoard(), board));
+    }
+
+    @Test
+    void deadCellWithExacly3AliveNeighboursShouldBeAliveInNextStep() {
+        // 1 0 1
+        // 0 0 1    [martwa komórka (1,1) ma dokładnie 3 żywych sąsiadów]
+        // 0 0 0
+        
+        boolean[][] board = {{true,false,true}, {false, false, true},
+                {false, false, false}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3);
+        game.setBoard(board);
+
+        assertFalse(game.getBoard()[1][1]);
+        game.doStep();
+        assertTrue(game.getBoard()[1][1]);
+    }
+
+    @Test
+    void edgeTestOfDeadCellWithExacly3AliveNeighboursShouldBeAliveInNextStep() {
+        //  0 0 1  [martwa komórka (0,0) ma dokładnie 3 żywych sąsiadów]
+        //  0 0 0
+        //  1 0 1
+
+        boolean[][] board = {{false, false, true}, {false, false, false},
+                {true, false, true}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3);
+        game.setBoard(board);
+
+        assertFalse(game.getBoard()[0][0]);
+        game.doStep();
+        assertTrue(game.getBoard()[0][0]);
+
+    }
+
+    @Test
+    void deadCellWithMoreThan3NeighboursShouldBeDeadInNextStep() {
+        // 1 0 1
+        // 1 0 1    [martwa komórka (1,1) ma dokładnie 4 żywych sąsiadów]
+        // 0 0 0
+
+        boolean[][] board = {{true,false,true}, {true, false, true},
+                {false, false, false}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3);
+        game.setBoard(board);
+
+        assertFalse(game.getBoard()[1][1]);
+        game.doStep();
+        assertFalse(game.getBoard()[1][1]);
+    }
+
+    @Test
+    void deadCellWithLessThan3NeighboursShouldBeDeadInNextStep() {
+        // 1 0 1
+        // 0 0 0    [martwa komórka (1,1) ma dokładnie 2 żywych sąsiadów]
+        // 0 0 0
+
+        boolean[][] board = {{true,false,true}, {false, false, false},
+                {false, false, false}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3);
+        game.setBoard(board);
+
+        assertFalse(game.getBoard()[1][1]);
+        game.doStep();
+        assertFalse(game.getBoard()[1][1]);
+    }
+
+    @Test
+    void edgeTestOfDeadCellWithNot3AliveNeighboursShouldBeDeadInNextStep() {
+        // 0 0 1
+        // 0 0 0    [martwa komórka (0,0) ma dokładnie 1 żywego sąsiada]
+        // 0 0 0
+
+        boolean[][] board = {{false,false,true}, {false, false, false},
+                {false, false, false}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3);
+        game.setBoard(board);
+
+        assertFalse(game.getBoard()[0][0]);
+        game.doStep();
+        assertFalse(game.getBoard()[0][0]);
+    }
+
+    @Test
+    void aliveCellWith2NeighboursShouldBeAliveInNextStep() {
+        // 1 0 1
+        // 0 0 0    [żywa komórka (0,0) ma dokładnie 2 żywych sąsiadów]
+        // 1 0 0
+
+        boolean[][] board = {{true,false,true}, {false, false, false},
+                {true, false, false}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3);
+        game.setBoard(board);
+
+        assertTrue(game.getBoard()[0][0]);
+        game.doStep();
+        assertTrue(game.getBoard()[0][0]);
+    }
+
+    @Test
+    void aliveCellWith3NeighboursShouldBeAliveInNextStep() {
+        // 1 1 0
+        // 1 1 0 [żywa komórka (0,0) ma dokładnie 3 sąsiadów]
+        // 0 0 0
+
+        boolean[][] board = {{true, true, false}, {true, true, false},
+                {false, false, false}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3);
+        game.setBoard(board);
+
+        assertTrue(game.getBoard()[0][0]);
+        game.doStep();
+        assertTrue(game.getBoard()[0][0]);
+    }
+
+    @Test
+    void edgeTestOfAliveCellWith3NeigboursShouldBeAliveInNextStep() {
+        // 1 0 1
+        // 0 0 0 [żywa komórka (0,0) ma dokładnie 3 sąsiadów]
+        // 1 0 1
+
+        boolean[][] board = {{true, false, true}, {false, false, false},
+                {true, false, true}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3);
+        game.setBoard(board);
+
+        assertTrue(game.getBoard()[0][0]);
+        game.doStep();
+        assertTrue(game.getBoard()[0][0]);
+    }
+
+    @Test
+    void aliveCellWith1NeigbourShouldBeDeadInNextStep() {
+        // 1 1 0
+        // 0 0 0 [żywa komórka (0,0) ma dokładnie 1 sąsiada]
+        // 0 0 0
+
+        boolean[][] board = {{true, true, false}, {false, false, false},
+                {false, false, false}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3);
+        game.setBoard(board);
+
+        assertTrue(game.getBoard()[0][0]);
+        game.doStep();
+        assertFalse(game.getBoard()[0][0]);
+    }
+
+    @Test
+    void edgeTestOfAliveCellWith1NeigbourShouldBeDeadInNextStep() {
+        // 1 0 0
+        // 0 0 0 [żywa komórka (0,0) ma dokładnie 1 sąsiada]
+        // 0 0 1
+
+        boolean[][] board = {{true, false, false}, {false, false, false},
+                {false, false, true}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3);
+        game.setBoard(board);
+
+        assertTrue(game.getBoard()[0][0]);
+        game.doStep();
+        assertFalse(game.getBoard()[0][0]);
+    }
+
+    @Test
+    void aliveCellWithMoreThan3NeigboursShouldBeDeadInNextStep() {
+        // 0 1 0
+        // 1 1 1 [żywa komórka (1,1) ma dokładnie 4 sąsiadów]
+        // 0 1 0
+
+        boolean[][] board = {{false, true, false}, {true, true, true},
+                {false, true, false}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3);
+        game.setBoard(board);
+
+        assertTrue(game.getBoard()[1][1]);
+        game.doStep();
+        assertFalse(game.getBoard()[1][1]);
+    }
+
+    @Test
+    void edgeTestOfAliveCellWithMoreThan3NeigboursShouldBeDeadInNextStep() {
+        // 1 0 0
+        // 0 1 1 [żywa komórka (0,0) ma dokładnie 4 sąsiadów]
+        // 0 1 1
+
+        boolean[][] board = {{true, false, false}, {false, true, true},
+                {false, true, true}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3);
+        game.setBoard(board);
+
+        assertTrue(game.getBoard()[0][0]);
+        game.doStep();
+        assertFalse(game.getBoard()[0][0]);
+    }
+
+    @Test
+    void validIndexGetCellTest() {
+        boolean[][] board = {{true, false, false}, {false, true, true},
+                {false, true, true}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3);
+        game.setBoard(board);
+
+        assertFalse(game.getCell(0,1));
+        assertTrue(game.getCell(0,0));
+    }
+
+    @Test
+    void invalidRowIndexGetCellTest() {
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3);
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+            game.getCell(-1,1);
+        });
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+            game.getCell(3,1);
+        });
+
+
+    }
+
+    @Test
+    void invalidColumnIndexGetCellTest() {
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3);
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+            game.getCell(0,-1);
+        });
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+            game.getCell(0,3);
+        });
+    }
+}
