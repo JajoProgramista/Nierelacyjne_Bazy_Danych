@@ -32,7 +32,7 @@ public class PlainGameOfLifeSimulator implements GameOfLifeSimulator {
                         int ipos = (i + row + boardMain.getBoard().length) % boardMain.getBoard().length;
                         int jpos = (j + col + boardMain.getBoard()[0].length) % boardMain.getBoard()[0].length;
 
-                        if (boardMain.getBoard()[ipos][jpos]) {
+                        if (boardMain.getCell(ipos,jpos)) {
                             aliveNeighbours++;
                         }
                     }
