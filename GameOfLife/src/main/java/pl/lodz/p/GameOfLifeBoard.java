@@ -8,6 +8,7 @@ import java.util.Random;
  */
 public class GameOfLifeBoard {
     private boolean[][] board;
+    private final GameOfLifeSimulator simulationType;
 
     /**
      * Konstruktor tworzący plansze z losowymi wartościami
@@ -15,8 +16,24 @@ public class GameOfLifeBoard {
      *
      * @param height ilość wierszy planszy
      * @param width ilość kolumn planszy
+     * @param simulationType typ symulacji jako klasa interfejsu GameOfLifeSimulator
+     * @throws NullPointerException jeżeli typ symulacji będzie nullem
+     * @throws IndexOutOfBoundsException jeżeli wiersz lub kolumna < 1
      */
-    public GameOfLifeBoard(int height, int width) {
+    public GameOfLifeBoard(int height, int width, GameOfLifeSimulator simulationType) {
+        if (height < 1) {
+            throw new IndexOutOfBoundsException("Nieprawidłowa wysokość planszy, min: 1");
+        }
+
+        if (width < 1) {
+            throw new IndexOutOfBoundsException("Nieprawidłowa szerokość planszy, min: 1");
+        }
+
+        if (simulationType == null) {
+            throw new NullPointerException("Podaj poprawny rodzaj symulacji! Nie Null");
+        }
+        this.simulationType = simulationType;
+
         board = new boolean[height][width];
         Random r = new Random();
         for (int i = 0; i < height; i++) {
@@ -52,76 +69,53 @@ public class GameOfLifeBoard {
     }
 
     /**
-     * Getter dla poszczególnej komórki planszy.
+     * Funkcja walidująca przekazywane indexy wiersza i kolumny.
      *
-     * @param i index wiersza planszy
-     * @param j index kolmuny planszy
-     * @return wartość boolean komórki planszy
-     * @throws ArrayIndexOutOfBoundsException gdy wartość wykracza poza zakres planszy
+     * @param x index wiersza planszy
+     * @param y index kolumny planszy
      */
-    public boolean getCell(int i, int j) {
-        if (i < 0 || i >= board.length) {
+    private void validateIndex(int x, int y) {
+        if (x < 0 || x >= board.length) {
             throw new ArrayIndexOutOfBoundsException("Nieprawidłowy wiersz, min: 0, "
                     + "max: " + (getBoard().length - 1));
         }
-        if (j < 0 || j >= board[0].length) {
+        if (y < 0 || y >= board[0].length) {
             throw new ArrayIndexOutOfBoundsException("Nieprawidłowa kolumna, min: 0, "
                     + "max: " + (getBoard()[0].length - 1));
         }
-        return board[i][j];
     }
 
     /**
-     * Funkcja ustalająca wartość poszczególnych komórek planszy
-     * na podstawie wartości danej komórki oraz wartości komórek sąsiadów.
-     * Komórka z wartością false, mająca dokładnie 3 sąsiadów z wartością true
-     * zmienia swoją wartość na true.
-     * Komórka z wartością true, mająca dokładnie 1 sąsiada lub mająca ich
-     * ponad 3 zmiena swoją wartość na false.
-     * W innych przypadkach komórki pozostają te same
-     * Funkcja tworzy tymczasową tablicę do której przypisuje kolejne nowe wartości
-     * komórek, następnie po sprawdzeniu wszystkich komórek z oryginalnej tablicy
-     * podmienia tablicę board z pola prywatnego na nową tablicę.
+     * Setter ustawiający wartość komórki na planszy.
+     *
+     * @param x index wiersza planszy
+     * @param y index kolumny planszy
+     * @param value wartość ustawianej komórki
      */
-    public void doStep() {
-        boolean[][] tempBoard = new boolean[board.length][board[0].length];
+    public void setCell(int x, int y, boolean value) {
+        validateIndex(x,y);
+        board[x][y] = value;
 
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                int aliveNeighbours = 0;
-                boolean curCell = board[i][j];
+    }
 
-                for (int row = -1; row <= 1; row++) {
-                    for (int col = -1; col <= 1; col++) {
-                        if (row == 0 && col == 0) {
-                            continue;
-                        }
-                        int ipos = (i + row + board.length) % board.length;
-                        int jpos = (j + col + board[0].length) % board[0].length;
+    /**
+     * Getter dla poszczególnej komórki planszy.
+     *
+     * @param x index wiersza planszy
+     * @param y index kolmuny planszy
+     * @return wartość boolean komórki planszy
+     * @throws ArrayIndexOutOfBoundsException gdy wartość wykracza poza zakres planszy
+     */
+    public boolean getCell(int x, int y) {
+        validateIndex(x,y);
+        return board[x][y];
+    }
 
-                        if (board[ipos][jpos]) {
-                            aliveNeighbours++;
-                        }
-                    }
-                }
-
-                if (curCell) {
-                    if (aliveNeighbours == 1 || aliveNeighbours > 3) {
-                        curCell = false;
-                    }
-                } else {
-                    if (aliveNeighbours == 3) {
-                        curCell = true;
-                    }
-                }
-
-                tempBoard[i][j] = curCell;
-            }
-        }
-
-        for (int i = 0; i < board.length; i++) {
-            System.arraycopy(tempBoard[i],0, board[i],0, board[0].length);
-        }
+    /**
+     * Funkcja wywołująca doStep() z interfejsu.
+     */
+    public void doSimulationStep() {
+        simulationType.doStep(this);
     }
 }
 
