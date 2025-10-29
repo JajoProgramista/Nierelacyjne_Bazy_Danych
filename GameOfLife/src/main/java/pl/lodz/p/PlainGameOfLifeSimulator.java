@@ -1,57 +1,27 @@
 package pl.lodz.p;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PlainGameOfLifeSimulator implements GameOfLifeSimulator {
 
     /**
-     * Funkcja ustalająca wartość poszczególnych komórek planszy
+     * Funkcja ustalająca wartość poszczególnych komórek planszy w następnym kroku gry
      * na podstawie wartości danej komórki oraz wartości komórek sąsiadów.
-     * Komórka z wartością false, mająca dokładnie 3 sąsiadów z wartością true
-     * zmienia swoją wartość na true.
-     * Komórka z wartością true, mająca dokładnie 1 sąsiada lub mająca ich
-     * ponad 3 zmiena swoją wartość na false.
-     * W innych przypadkach komórki pozostają te same
-     * Funkcja tworzy tymczasową tablicę do której przypisuje kolejne nowe wartości
-     * komórek, następnie po sprawdzeniu wszystkich komórek z oryginalnej tablicy
-     * podmienia tablicę board z pola prywatnego na nową tablicę.
+     * @param mainBoard plansza typu GameOfLifeBoard
      */
 
     @Override
-    public void doStep(GameOfLifeBoard boardMain) {
-        boolean[][] tempBoard = new boolean[boardMain.getBoard().length][boardMain.getBoard()[0].length];
+    public void doStep(GameOfLifeBoard mainBoard) {
+        Map<GameOfLifeCell, Boolean> cellsNextState = new HashMap<>();
 
-        for (int i = 0; i < boardMain.getBoard().length; i++) {
-            for (int j = 0; j < boardMain.getBoard()[0].length; j++) {
-                int aliveNeighbours = 0;
-                boolean curCell = boardMain.getBoard()[i][j];
-
-                for (int row = -1; row <= 1; row++) {
-                    for (int col = -1; col <= 1; col++) {
-                        if (row == 0 && col == 0) {
-                            continue;
-                        }
-                        int ipos = (i + row + boardMain.getBoard().length) % boardMain.getBoard().length;
-                        int jpos = (j + col + boardMain.getBoard()[0].length) % boardMain.getBoard()[0].length;
-
-                        if (boardMain.getCell(ipos,jpos)) {
-                            aliveNeighbours++;
-                        }
-                    }
-                }
-
-                if (curCell) {
-                    if (aliveNeighbours == 1 || aliveNeighbours > 3) {
-                        curCell = false;
-                    }
-                } else {
-                    if (aliveNeighbours == 3) {
-                        curCell = true;
-                    }
-                }
-
-                tempBoard[i][j] = curCell;
+        for (int i = 0; i < mainBoard.getBoard().length; i++) {
+            for (int j = 0; j < mainBoard.getBoard()[0].length; j++) {
+                GameOfLifeCell curCell = mainBoard.getBoard()[i][j];
+                cellsNextState.put(curCell, curCell.nextState());
             }
         }
 
-        boardMain.setBoard(tempBoard);
+        cellsNextState.forEach((cell, value) -> cell.updateState(value));
     }
 }
