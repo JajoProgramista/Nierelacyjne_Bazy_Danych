@@ -1,11 +1,19 @@
+/*
+ * Copyright (c) 2025 Timmy&Pitru
+ * Licensed under the MIT License.
+ * See LICENSE file in the project root for full license information.
+ */
+
 package pl.lodz.p;
+
+import java.util.List;
 
 public class GameOfLifeColumn extends GameOfLifeBoardInfo {
     /**
      * Konstruktor inicjalizujący określoną kolumnę.
      * @param line kolumna planszy, tablica komórek GameOfLifeCell.
      */
-    GameOfLifeColumn(GameOfLifeCell[] line) {
+    GameOfLifeColumn(List<GameOfLifeCell> line) {
         super(line);
     }
 }

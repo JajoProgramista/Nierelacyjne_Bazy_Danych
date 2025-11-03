@@ -1,6 +1,14 @@
+/*
+ * Copyright (c) 2025 Timmy&Pitru
+ * Licensed under the MIT License.
+ * See LICENSE file in the project root for full license information.
+ */
+
 package pl.lodz.p;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -8,7 +16,8 @@ import java.util.Random;
  * wartości komórek tej planszy w kolejnych posunięciach.
  */
 public class GameOfLifeBoard {
-    private GameOfLifeCell[][] board;
+
+    private List<List<GameOfLifeCell>> board;
     private final GameOfLifeSimulator simulationType;
 
     /**
@@ -35,12 +44,16 @@ public class GameOfLifeBoard {
         }
         this.simulationType = simulationType;
 
-        board = new GameOfLifeCell[height][width];
+        board = Arrays.asList(new List[height]);
         Random r = new Random();
         for (int i = 0; i < height; i++) {
+            List<GameOfLifeCell> tempRow = Arrays.asList(new GameOfLifeCell[width]);
+
             for (int j = 0; j < width; j++) {
-                board[i][j] = new GameOfLifeCell(r.nextBoolean());
+                tempRow.set(j, new GameOfLifeCell(r.nextBoolean()));
             }
+
+            board.set(i, tempRow);
         }
 
         initializeCellsNeigbours(board);
@@ -50,22 +63,22 @@ public class GameOfLifeBoard {
      * Funkcja inicjalizująca sąsiadów poszczególnych komórek planszy.
      * @param board plansza GameOfLifeBoard, tablica dwuwymiarowa
      */
-    public void initializeCellsNeigbours(GameOfLifeCell[][] board) {
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
+    public void initializeCellsNeigbours(List<List<GameOfLifeCell>> board) {
+        for (int i = 0; i < board.size(); i++) {
+            for (int j = 0; j < board.getFirst().size(); j++) {
                 ArrayList<GameOfLifeCell> tempNeighbours = new ArrayList<>();
                 for (int row = -1; row <= 1; row++) {
                     for (int col = -1; col <= 1; col++) {
                         if (row == 0 && col == 0) {
                             continue;
                         }
-                        int rowPos = (i + row + board.length) % board.length;
-                        int colPos = (j + col + board[0].length) % board[0].length;
+                        int rowPos = (i + row + board.size()) % board.size();
+                        int colPos = (j + col + board.getFirst().size()) % board.getFirst().size();
 
-                        tempNeighbours.add(board[rowPos][colPos]);
+                        tempNeighbours.add(board.get(rowPos).get(colPos));
                     }
                 }
-                board[i][j].setNeigboursList(tempNeighbours);
+                board.get(i).get(j).setNeigboursList(tempNeighbours);
             }
         }
     }
@@ -75,10 +88,16 @@ public class GameOfLifeBoard {
      *
      * @param board tablica dwuwymiarowa boolean
      */
-    void setBoard(GameOfLifeCell[][] board) {
-        this.board = new GameOfLifeCell[board.length][board[0].length];
-        for (int i = 0; i < board.length; i++) {
-            System.arraycopy(board[i], 0, this.board[i], 0, board[0].length);
+    void setBoard(List<List<GameOfLifeCell>> board) {
+        this.board = Arrays.asList(new List[board.size()]);
+        for (int i = 0; i < board.size(); i++) {
+
+            List<GameOfLifeCell> tempRow = Arrays.asList(new GameOfLifeCell[board.getFirst().size()]);
+            for (int j = 0; j < board.getFirst().size(); j++) {
+                tempRow.set(j, new GameOfLifeCell(board.get(i).get(j).getCellValue()));
+            }
+
+            this.board.set(i, tempRow);
         }
 
         initializeCellsNeigbours(this.board);
@@ -89,13 +108,16 @@ public class GameOfLifeBoard {
      *
      * @return tablica dwuwymiarowa boolean
      */
-    GameOfLifeCell[][] getBoard() {
-        GameOfLifeCell[][] boardCopy = new GameOfLifeCell[board.length][board[0].length];
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                boardCopy[i][j] = board[i][j];
+    List<List<GameOfLifeCell>> getBoard() {
+        List<List<GameOfLifeCell>> boardCopy = Arrays.asList(new List[board.size()]);
+        for (int i = 0; i < board.size(); i++) {
 
+            List<GameOfLifeCell> tempRow = Arrays.asList(new GameOfLifeCell[board.getFirst().size()]);
+            for (int j = 0; j < board.getFirst().size(); j++) {
+                tempRow.set(j, board.get(i).get(j));
             }
+
+            boardCopy.set(i, tempRow);
         }
 
         return boardCopy;
@@ -108,13 +130,13 @@ public class GameOfLifeBoard {
      * @param y index kolumny planszy
      */
     private void validateIndex(int x, int y) {
-        if (x < 0 || x >= board.length) {
+        if (x < 0 || x >= board.size()) {
             throw new ArrayIndexOutOfBoundsException("Nieprawidłowy wiersz, min: 0, "
-                    + "max: " + (getBoard().length - 1));
+                    + "max: " + (getBoard().size() - 1));
         }
-        if (y < 0 || y >= board[0].length) {
+        if (y < 0 || y >= board.getFirst().size()) {
             throw new ArrayIndexOutOfBoundsException("Nieprawidłowa kolumna, min: 0, "
-                    + "max: " + (getBoard()[0].length - 1));
+                    + "max: " + (getBoard().getFirst().size() - 1));
         }
     }
 
@@ -127,7 +149,7 @@ public class GameOfLifeBoard {
      */
     public void setCell(int x, int y, boolean value) {
         validateIndex(x,y);
-        board[x][y].updateState(value);
+        board.get(x).get(y).updateState(value);
 
     }
 
@@ -141,7 +163,7 @@ public class GameOfLifeBoard {
      */
     public boolean getCell(int x, int y) {
         validateIndex(x,y);
-        return board[x][y].getCellValue();
+        return board.get(x).get(y).getCellValue();
     }
 
     /**
@@ -150,14 +172,14 @@ public class GameOfLifeBoard {
      * @return obiekt GameOfLifeRow, wiersz planszy
      */
     GameOfLifeRow getRow(int x) {
-        if (x < 0 || x >= board.length) {
+        if (x < 0 || x >= board.size()) {
             throw new ArrayIndexOutOfBoundsException("Nieprawidłowy wiersz, min: 0, "
-                    + "max: " + (getBoard().length - 1));
+                    + "max: " + (getBoard().size() - 1));
         }
 
-        GameOfLifeCell[] tempRow = new GameOfLifeCell[board[0].length];
-        for (int i = 0; i < board[0].length; i++) {
-            tempRow[i] = board[x][i];
+        List<GameOfLifeCell> tempRow = Arrays.asList(new GameOfLifeCell[board.getFirst().size()]);
+        for (int i = 0; i < board.getFirst().size(); i++) {
+            tempRow.set(i, board.get(x).get(i));
         }
 
         return new GameOfLifeRow(tempRow);
@@ -169,14 +191,14 @@ public class GameOfLifeBoard {
      * @return obiekt GameOfLifeRow, kolumna planszy
      */
     GameOfLifeColumn getColumn(int y) {
-        if (y < 0 || y >= board[0].length) {
+        if (y < 0 || y >= board.getFirst().size()) {
             throw new ArrayIndexOutOfBoundsException("Nieprawidłowa kolumna, min: 0, "
-                    + "max: " + (getBoard()[0].length - 1));
+                    + "max: " + (getBoard().getFirst().size() - 1));
         }
 
-        GameOfLifeCell[] tempCol = new GameOfLifeCell[board.length];
-        for (int i = 0; i < board.length; i++) {
-            tempCol[i] = board[i][y];
+        List<GameOfLifeCell> tempCol = Arrays.asList(new GameOfLifeCell[board.size()]);
+        for (int i = 0; i < board.size(); i++) {
+            tempCol.set(i, board.get(i).get(y));
         }
 
         return new GameOfLifeColumn(tempCol);
@@ -189,5 +211,6 @@ public class GameOfLifeBoard {
     public void doSimulationStep() {
         simulationType.doStep(this);
     }
+
 }
 

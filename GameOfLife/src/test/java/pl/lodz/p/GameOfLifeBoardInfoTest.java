@@ -1,9 +1,18 @@
+/*
+ * Copyright (c) 2025 Timmy&Pitru
+ * Licensed under the MIT License.
+ * See LICENSE file in the project root for full license information.
+ */
+
 package pl.lodz.p;
 
 import org.junit.jupiter.api.Test;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -18,10 +27,14 @@ class GameOfLifeBoardInfoTest {
         // 1 0 1
         // 0 0 1
         // 0 0 0
-        GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
-                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                new GameOfLifeCell(false)}};
+        List<List<GameOfLifeCell>> board = Arrays.asList(
+                Arrays.asList(new GameOfLifeCell(true),new GameOfLifeCell(false),
+                        new GameOfLifeCell(true)),
+                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
+                        new GameOfLifeCell(true)),
+                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
+                        new GameOfLifeCell(false))
+        );
 
         game.setBoard(board);
 
@@ -29,6 +42,7 @@ class GameOfLifeBoardInfoTest {
         assertEquals(1, game.getRow(0).countDeadCells());
         assertEquals(2, game.getRow(0).countAliveCells());
     }
+
 
     @Test
     void getColTest() {
@@ -38,11 +52,17 @@ class GameOfLifeBoardInfoTest {
         // 0 0 1
         // 0 0 0
         // 1 1 1
-        GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
-                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                new GameOfLifeCell(false)}, {new GameOfLifeCell(true), new GameOfLifeCell(true),
-                new GameOfLifeCell(true)}};
+
+        List<List<GameOfLifeCell>> board = Arrays.asList(
+                Arrays.asList(new GameOfLifeCell(true),new GameOfLifeCell(false),
+                        new GameOfLifeCell(true)),
+                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
+                        new GameOfLifeCell(true)),
+                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
+                        new GameOfLifeCell(false)),
+                Arrays.asList(new GameOfLifeCell(true), new GameOfLifeCell(true),
+                        new GameOfLifeCell(true))
+        );
 
         game.setBoard(board);
 
@@ -50,6 +70,7 @@ class GameOfLifeBoardInfoTest {
         assertEquals(1, game.getColumn(2).countDeadCells());
         assertEquals(3, game.getColumn(2).countAliveCells());
     }
+
 
     @Test
     void nullRowGivenShouldThrowException() {
@@ -92,16 +113,21 @@ class GameOfLifeBoardInfoTest {
 
     @Test
     void listenerObserverTest() {
-        GameOfLifeBoard game = new GameOfLifeBoard(4, 10, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(4, 3, new PlainGameOfLifeSimulator());
         // 1 0 1
         // 0 0 1
         // 0 0 0
         // 1 1 1
-        GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
-                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                new GameOfLifeCell(false)}, {new GameOfLifeCell(true), new GameOfLifeCell(true),
-                new GameOfLifeCell(true)}};
+        List<List<GameOfLifeCell>> board = Arrays.asList(
+                Arrays.asList(new GameOfLifeCell(true),new GameOfLifeCell(false),
+                        new GameOfLifeCell(true)),
+                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
+                        new GameOfLifeCell(true)),
+                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
+                        new GameOfLifeCell(false)),
+                Arrays.asList(new GameOfLifeCell(true), new GameOfLifeCell(true),
+                        new GameOfLifeCell(true))
+        );
 
         game.setBoard(board);
         var row = game.getRow(3);
@@ -116,9 +142,9 @@ class GameOfLifeBoardInfoTest {
 
     @Test
     void propertyChangeTest() {
-        GameOfLifeCell[] cellsArray = new GameOfLifeCell[2];
+        List<GameOfLifeCell> cellsArray = Arrays.asList(new GameOfLifeCell[2]);
         GameOfLifeCell cell1 = new GameOfLifeCell(false);
-        cellsArray[0] = cell1;
+        cellsArray.set(0, cell1);
 
         GameOfLifeRow row = new GameOfLifeRow(cellsArray);
 
@@ -132,7 +158,7 @@ class GameOfLifeBoardInfoTest {
     @Test
     void propertyChangeSameValueTest() {
         GameOfLifeCell cell = new GameOfLifeCell(true);
-        GameOfLifeCell[] cells = {cell};
+        List<GameOfLifeCell> cells = Arrays.asList(cell);
         GameOfLifeRow row = new GameOfLifeRow(cells);
 
         PropertyChangeEvent evt = new PropertyChangeEvent(cell, "cellValue", true, true);
@@ -150,10 +176,7 @@ class GameOfLifeBoardInfoTest {
     void removeListenerTest() {
         GameOfLifeCell cell1 = new GameOfLifeCell(false);
         GameOfLifeCell cell2 = new GameOfLifeCell(true);
-        GameOfLifeCell[] cellsArray = new GameOfLifeCell[2];
-
-        cellsArray[0] = cell1;
-        cellsArray[1] = cell2;
+        List<GameOfLifeCell> cellsArray = Arrays.asList(cell1, cell2);
 
         GameOfLifeRow row = new GameOfLifeRow(cellsArray);
 
@@ -172,9 +195,9 @@ class GameOfLifeBoardInfoTest {
     @Test
     public void propertyChangeListenerOtherMessageTest() {
         GameOfLifeCell cell1 = new GameOfLifeCell(false);
-        GameOfLifeCell[] cellsArray = new GameOfLifeCell[2];
+        List<GameOfLifeCell> cellsArray = Arrays.asList(new GameOfLifeCell[2]);
 
-        cellsArray[0] = cell1;
+        cellsArray.set(0, cell1);
 
         GameOfLifeRow row = new GameOfLifeRow(cellsArray);
         assertEquals(1, row.countDeadCells());
