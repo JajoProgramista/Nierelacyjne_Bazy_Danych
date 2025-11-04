@@ -8,11 +8,11 @@ package pl.lodz.p;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
+import java.util.List;
 
 public class GameOfLifeCell {
     private boolean value;
-    private ArrayList<GameOfLifeCell> neighbourCells;
+    private GameOfLifeCell[] neighbourCells;
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     /**
@@ -21,14 +21,14 @@ public class GameOfLifeCell {
      */
     public GameOfLifeCell(boolean value) {
         this.value = value;
-        neighbourCells = new ArrayList<>();
+        neighbourCells = new GameOfLifeCell[8];
     }
 
     /**
      * Ustawia liste sąsiadów komórki na podaną w argumencie funkcji.
      * @param neighbours lista sąsiadów typu GameOfLifeCell
      */
-    void setNeigboursList(ArrayList<GameOfLifeCell> neighbours) {
+    void setNeighboursList(GameOfLifeCell[] neighbours) {
         if (neighbours == null) {
             throw new NullPointerException("Komórka sąsiadująca nie może być nullem!");
         }
@@ -48,13 +48,18 @@ public class GameOfLifeCell {
      * Getter zwracający listę sąsiadów.
      * @return listę z obiektami GameOfLifeCell
      */
-    public ArrayList<GameOfLifeCell> getNeighbourCells() {
-        ArrayList<GameOfLifeCell> copyOfNeighCells = new ArrayList<>();
+    public GameOfLifeCell[] getNeighbourCells() {
+        GameOfLifeCell[] copyOfNeighCells = new GameOfLifeCell[8];
 
-        for (GameOfLifeCell cell : neighbourCells) {
-            boolean value = cell.getCellValue();
-            copyOfNeighCells.add(new GameOfLifeCell(value));
+        for (int i = 0; i < 8; i++) {
+            if (neighbourCells[i] == null) {
+                continue;
+            }
+
+            boolean value = neighbourCells[i].getCellValue();
+            copyOfNeighCells[i] = new GameOfLifeCell(value);
         }
+
         return copyOfNeighCells;
     }
 
@@ -62,7 +67,9 @@ public class GameOfLifeCell {
      * Funkcja obliczająca następny stan komórki, na podstawie liczby sąsiadów
      * oraz stanu danej komórki.
      * @return wartość boolean komórki (true / false)
-     */
+     *
+     *
+     * */
     public boolean nextState() {
         int aliveNeigbours = 0;
         for (GameOfLifeCell cell : neighbourCells) {

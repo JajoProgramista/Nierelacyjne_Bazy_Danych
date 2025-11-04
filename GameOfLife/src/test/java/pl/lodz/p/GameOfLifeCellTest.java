@@ -8,33 +8,35 @@ package pl.lodz.p;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+
 
 class GameOfLifeCellTest {
     @Test
     void setNullNeigboursListShouldThrowException() {
         GameOfLifeCell cell = new GameOfLifeCell(true);
         assertThrows(NullPointerException.class, () -> {
-          cell.setNeigboursList(null);
+          cell.setNeighboursList(null);
         });
     }
 
     @Test
     void getCellsNeighboursTest() {
-        ArrayList<GameOfLifeCell> cellNeigbours = new ArrayList<>();
+        GameOfLifeCell[] cellNeigbours = new GameOfLifeCell[8];
 
-        cellNeigbours.add(new GameOfLifeCell(false));
-        cellNeigbours.add(new GameOfLifeCell(true));
-        cellNeigbours.add(new GameOfLifeCell(true));
+        cellNeigbours[0] = new GameOfLifeCell(false);
+        cellNeigbours[1] = new GameOfLifeCell(true);
+        cellNeigbours[2] = new GameOfLifeCell(true);
 
         GameOfLifeCell cell = new GameOfLifeCell(true);
-        assertEquals(0,cell.getNeighbourCells().size());
-        cell.setNeigboursList(cellNeigbours);
-        assertEquals(3,cell.getNeighbourCells().size());
 
+        cell.setNeighboursList(cellNeigbours);
+        assertFalse(cell.getNeighbourCells()[0].getCellValue());
+        assertTrue(cell.getNeighbourCells()[1].getCellValue());
+        assertTrue(cell.getNeighbourCells()[2].getCellValue());
     }
 
 }

@@ -27,14 +27,10 @@ class GameOfLifeBoardInfoTest {
         // 1 0 1
         // 0 0 1
         // 0 0 0
-        List<List<GameOfLifeCell>> board = Arrays.asList(
-                Arrays.asList(new GameOfLifeCell(true),new GameOfLifeCell(false),
-                        new GameOfLifeCell(true)),
-                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
-                        new GameOfLifeCell(true)),
-                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
-                        new GameOfLifeCell(false))
-        );
+        GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(false)}};
 
         game.setBoard(board);
 
@@ -53,16 +49,11 @@ class GameOfLifeBoardInfoTest {
         // 0 0 0
         // 1 1 1
 
-        List<List<GameOfLifeCell>> board = Arrays.asList(
-                Arrays.asList(new GameOfLifeCell(true),new GameOfLifeCell(false),
-                        new GameOfLifeCell(true)),
-                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
-                        new GameOfLifeCell(true)),
-                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
-                        new GameOfLifeCell(false)),
-                Arrays.asList(new GameOfLifeCell(true), new GameOfLifeCell(true),
-                        new GameOfLifeCell(true))
-        );
+        GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(false)}, {new GameOfLifeCell(true), new GameOfLifeCell(true),
+                new GameOfLifeCell(true)}};
 
         game.setBoard(board);
 
@@ -118,16 +109,11 @@ class GameOfLifeBoardInfoTest {
         // 0 0 1
         // 0 0 0
         // 1 1 1
-        List<List<GameOfLifeCell>> board = Arrays.asList(
-                Arrays.asList(new GameOfLifeCell(true),new GameOfLifeCell(false),
-                        new GameOfLifeCell(true)),
-                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
-                        new GameOfLifeCell(true)),
-                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
-                        new GameOfLifeCell(false)),
-                Arrays.asList(new GameOfLifeCell(true), new GameOfLifeCell(true),
-                        new GameOfLifeCell(true))
-        );
+        GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(false)}, {new GameOfLifeCell(true), new GameOfLifeCell(true),
+                new GameOfLifeCell(true)}};
 
         game.setBoard(board);
         var row = game.getRow(3);

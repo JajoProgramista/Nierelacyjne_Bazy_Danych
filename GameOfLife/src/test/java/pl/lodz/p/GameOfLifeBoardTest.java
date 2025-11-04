@@ -24,9 +24,9 @@ class GameOfLifeBoardTest {
     void constructorSizeBoardTestHeightShouldBe4WidthShouldBe8() {
         GameOfLifeBoard board = new GameOfLifeBoard(4,8, new PlainGameOfLifeSimulator());
 
-        List<List<GameOfLifeCell>> testingBoard = board.getBoard();
-        assertEquals(4, testingBoard.size());
-        assertEquals(8, testingBoard.getFirst().size());
+        GameOfLifeCell[][] testingBoard = board.getBoard();
+        assertEquals(4, testingBoard.length);
+        assertEquals(8, testingBoard[0].length);
 
     }
 
@@ -38,8 +38,8 @@ class GameOfLifeBoardTest {
 
 
         boolean checkIsTheSame = true;
-        for (int i = 0; i < firstBoard.getBoard().size(); i++) {
-            for (int j = 0; j < firstBoard.getBoard().getFirst().size(); j++) {
+        for (int i = 0; i < firstBoard.getBoard().length; i++) {
+            for (int j = 0; j < firstBoard.getBoard()[0].length; j++) {
                 if (firstBoard.getCell(i,j) != secondBoard.getCell(i,j)) {
                     checkIsTheSame = false;
                 }
@@ -73,19 +73,15 @@ class GameOfLifeBoardTest {
     void getBoardTest() {
         GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
 
-        List<List<GameOfLifeCell>> board = Arrays.asList(
-                Arrays.asList(new GameOfLifeCell(true),new GameOfLifeCell(false),
-                        new GameOfLifeCell(true)),
-                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
-                        new GameOfLifeCell(true)),
-                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
-                        new GameOfLifeCell(false))
-        );
+        GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(false)}};
 
         boolean checkIsTheSame = true;
-        for (int i = 0; i < game.getBoard().size(); i++) {
-            for (int j = 0; j < game.getBoard().getFirst().size(); j++) {
-                if (game.getCell(i,j) != board.get(i).get(j).getCellValue()) {
+        for (int i = 0; i < game.getBoard().length; i++) {
+            for (int j = 0; j < game.getBoard()[0].length; j++) {
+                if (game.getCell(i,j) != board[i][j].getCellValue()) {
                     checkIsTheSame = false;
                 }
             }
@@ -95,9 +91,9 @@ class GameOfLifeBoardTest {
         game.setBoard(board);
         checkIsTheSame = true;
 
-        for (int i = 0; i < game.getBoard().size(); i++) {
-            for (int j = 0; j < game.getBoard().getFirst().size(); j++) {
-                if (game.getCell(i,j) != board.get(i).get(j).getCellValue()) {
+        for (int i = 0; i < game.getBoard().length; i++) {
+            for (int j = 0; j < game.getBoard()[0].length; j++) {
+                if (game.getCell(i,j) != board[i][j].getCellValue()) {
                     checkIsTheSame = false;
                 }
             }
@@ -107,14 +103,10 @@ class GameOfLifeBoardTest {
 
     @Test
     void validIndexGetCellTest() {
-        List<List<GameOfLifeCell>> board = Arrays.asList(
-                Arrays.asList(new GameOfLifeCell(true),new GameOfLifeCell(false),
-                        new GameOfLifeCell(true)),
-                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
-                        new GameOfLifeCell(true)),
-                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
-                        new GameOfLifeCell(false))
-        );
+        GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(false)}};
         GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
         game.setBoard(board);
 
@@ -150,19 +142,15 @@ class GameOfLifeBoardTest {
     void validSetCellTest() {
         GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
 
-        List<List<GameOfLifeCell>> board = Arrays.asList(
-                Arrays.asList(new GameOfLifeCell(true),new GameOfLifeCell(false),
-                        new GameOfLifeCell(true)),
-                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
-                        new GameOfLifeCell(true)),
-                Arrays.asList(new GameOfLifeCell(false), new GameOfLifeCell(false),
-                        new GameOfLifeCell(false))
-        );
+        GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(false)}};
         game.setBoard(board);
 
-        assertTrue(game.getBoard().getFirst().getFirst().getCellValue());
+        assertTrue(game.getBoard()[0][0].getCellValue());
         game.setCell(0, 0, false);
-        assertFalse(game.getBoard().getFirst().getFirst().getCellValue());
+        assertFalse(game.getBoard()[0][0].getCellValue());
 
     }
 

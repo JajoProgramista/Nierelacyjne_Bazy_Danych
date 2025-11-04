@@ -21,27 +21,14 @@ public class PlainGameOfLifeSimulator implements GameOfLifeSimulator {
     public void doStep(GameOfLifeBoard mainBoard) {
         Map<GameOfLifeCell, Boolean> cellsNextState = new HashMap<>();
 
-        for (int i = 0; i < mainBoard.getBoard().size(); i++) {
-            for (int j = 0; j < mainBoard.getBoard().getFirst().size(); j++) {
-                GameOfLifeCell curCell = mainBoard.getBoard().get(i).get(j);
+        for (int i = 0; i < mainBoard.getBoard().length; i++) {
+            for (int j = 0; j < mainBoard.getBoard()[0].length; j++) {
+                GameOfLifeCell curCell = mainBoard.getBoard()[i][j];
                 cellsNextState.put(curCell, curCell.nextState());
             }
         }
 
-        cellsNextState.forEach(GameOfLifeCell::updateState);
+        cellsNextState.forEach((cell, value) -> cell.updateState(value));
 
-        /*boolean[][] tempBoard = new boolean[mainBoard.getBoard().size()][mainBoard.getBoard().getFirst().size()];
-
-        for (int i = 0; i < mainBoard.getBoard().size(); i++) {
-            for (int j = 0; j < mainBoard.getBoard().getFirst().size(); j++) {
-                tempBoard[i][j] = mainBoard.getBoard().get(i).get(j).nextState();
-            }
-        }
-
-        for (int i = 0; i < mainBoard.getBoard().size(); i++) {
-            for (int j = 0; j < mainBoard.getBoard().getFirst().size(); j++) {
-                mainBoard.getBoard().get(i).get(j).updateState(tempBoard[i][j]);
-            }
-        }*/
     }
 }
