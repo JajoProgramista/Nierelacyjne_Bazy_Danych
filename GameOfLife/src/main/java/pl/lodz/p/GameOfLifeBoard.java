@@ -6,7 +6,11 @@
 
 package pl.lodz.p;
 
-import java.util.ArrayList;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -59,7 +63,7 @@ public class GameOfLifeBoard {
      * Funkcja inicjalizująca sąsiadów poszczególnych komórek planszy.
      * @param board plansza GameOfLifeBoard, tablica dwuwymiarowa
      */
-    public void initializeCellsNeighbours(GameOfLifeCell[][] board) {
+    void initializeCellsNeighbours(GameOfLifeCell[][] board) {
         int count;
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
@@ -156,8 +160,9 @@ public class GameOfLifeBoard {
      * Funkcja zwracająca obiekt GameOfLifeRow, określony wiersz planszy.
      * @param x wiersz planszy
      * @return obiekt GameOfLifeRow, wiersz planszy
+     * @throws ArrayIndexOutOfBoundsException kiedy podany index wiersza jest nieprawidłowy
      */
-    GameOfLifeRow getRow(int x) {
+    public GameOfLifeRow getRow(int x) {
         if (x < 0 || x >= board.length) {
             throw new ArrayIndexOutOfBoundsException("Nieprawidłowy wiersz, min: 0, "
                     + "max: " + (getBoard().length - 1));
@@ -175,8 +180,9 @@ public class GameOfLifeBoard {
      * Funkcja zwracająca obiekt GameOfLifeRow, określoną kolumnę planszy.
      * @param y kolumna planszy
      * @return obiekt GameOfLifeRow, kolumna planszy
+     * @throws ArrayIndexOutOfBoundsException kiedy podany index kolumny jest nieprawidłowy
      */
-    GameOfLifeColumn getColumn(int y) {
+    public GameOfLifeColumn getColumn(int y) {
         if (y < 0 || y >= board[0].length) {
             throw new ArrayIndexOutOfBoundsException("Nieprawidłowa kolumna, min: 0, "
                     + "max: " + (getBoard()[0].length - 1));
@@ -190,7 +196,6 @@ public class GameOfLifeBoard {
         return new GameOfLifeColumn(tempCol);
     }
 
-
     /**
      * Funkcja wywołująca doStep() z interfejsu.
      */
@@ -198,5 +203,83 @@ public class GameOfLifeBoard {
         simulationType.doStep(this);
     }
 
+    /**
+     * Funkcja zwracająca opis obiektu w postaci stringa.
+     * @return łańcuch znaków string
+     */
+    @Override
+    public String toString() {
+        StringBuilder boardValues = new StringBuilder();
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                boardValues.append(board[i][j].getCellValue());
+                boardValues.append(" ");
+            }
+            boardValues.append('\n');
+        }
+
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("Plansza:\n", boardValues)
+                .append("Rodzaj symulacji: ", simulationType.getClass().getSimpleName())
+                .toString();
+    }
+
+    /**
+     * Funkcja porównująca ten obiekt z podanym na podstawie informacji o
+     * wartościach poszczególnych komórek, oraz o podanej klasie symulacji.
+     * @param obj referencja do obiektu, który będzie porównywany.
+     * @return wartość boolean prawda / fałsz
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof GameOfLifeBoard)) {
+            return false;
+        }
+
+        GameOfLifeBoard game = (GameOfLifeBoard) obj;
+        boolean[][] thisCellValues = new boolean[board.length][board[0].length];
+        boolean[][] gameCellValues = new boolean[game.board.length][game.board[0].length];
+
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                thisCellValues[i][j] = board[i][j].getCellValue();
+
+                if (i < gameCellValues.length && j < gameCellValues[0].length) {
+                    gameCellValues[i][j] = game.board[i][j].getCellValue();
+                }
+            }
+        }
+
+        return new EqualsBuilder()
+                .append(thisCellValues, gameCellValues)
+                .append(simulationType.getClass(), game.simulationType.getClass())
+                .isEquals();
+    }
+
+    /**
+     * Metoda haszująca obiekt, na podstawie informacji o wartości
+     * poszczególnych komórek planszy.
+     * @return wartość całkowita int hasha
+     */
+    @Override
+    public int hashCode() {
+        boolean[][] boardValues = new boolean[board.length][board[0].length];
+
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                boardValues[i][j] = board[i][j].getCellValue();
+            }
+        }
+        return new HashCodeBuilder(3, 7)
+                .append(boardValues)
+                .append(simulationType.getClass())
+                .hashCode();
+    }
 }
 

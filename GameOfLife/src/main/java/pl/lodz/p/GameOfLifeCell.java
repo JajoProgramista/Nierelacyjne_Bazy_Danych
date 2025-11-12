@@ -6,9 +6,14 @@
 
 package pl.lodz.p;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.List;
+import java.util.ArrayList;
 
 public class GameOfLifeCell {
     private boolean value;
@@ -119,4 +124,88 @@ public class GameOfLifeCell {
         this.support.removePropertyChangeListener(listener);
     }
 
+    /**
+     * Funkcja zwracająca opis obiektu w postaci stringa.
+     * @return łańcuch znaków String
+     */
+    @Override
+    public String toString() {
+        StringBuilder neighStr = new StringBuilder();
+        for (GameOfLifeCell cell : neighbourCells) {
+            neighStr.append(cell.getCellValue());
+            neighStr.append(" ");
+        }
+
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+                .append("Wartość komórki: ", value)
+                .append("Sąsiedzi komórki: ", neighStr)
+                .toString();
+    }
+
+    /**
+     * Funkcja porównująca ten obiekt z podanym na podstawie informacji o
+     * wartościach poszczególnych komórek sąsiadów, oraz wartości tej komórki.
+     * @param obj referencja do obiektu, który będzie porównywany.
+     * @return wartość boolean prawda / fałsz
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof GameOfLifeCell)) {
+            return false;
+        }
+
+        GameOfLifeCell cell = (GameOfLifeCell) obj;
+        boolean[] thisNeighValues = new boolean[neighbourCells.length];
+        boolean[] cellNeighValues = new boolean[cell.neighbourCells.length];
+
+        ArrayList<GameOfLifeCell> thisNullValues = new ArrayList<>();
+        ArrayList<GameOfLifeCell> cellNullValues = new ArrayList<>();
+
+        for (int i = 0; i < thisNeighValues.length; i++) {
+            if (neighbourCells[i] == null) {
+                thisNullValues.add(null);
+            } else {
+                thisNeighValues[i] = neighbourCells[i].getCellValue();
+            }
+
+            if (i < cellNeighValues.length) {
+                if (cell.neighbourCells[i] == null) {
+                    cellNullValues.add(null);
+                } else {
+                    cellNeighValues[i] = cell.neighbourCells[i].getCellValue();
+                }
+            }
+        }
+
+        return new EqualsBuilder()
+                .append(value, cell.value)
+                .append(thisNeighValues, cellNeighValues)
+                .append(thisNullValues, cellNullValues)
+                .isEquals();
+    }
+
+    /**
+     * Metoda haszująca obiekt, na podstawie informacji o wartości
+     * poszczególnych komórek sąsiadów oraz wartości tej komórki.
+     * @return wartość całkowita int hasha
+     */
+    @Override
+    public int hashCode() {
+        boolean[] neighValues = new boolean[neighbourCells.length];
+        for (int i = 0; i < neighValues.length; i++) {
+            if (neighbourCells[i] != null) {
+                neighValues[i] = neighbourCells[i].getCellValue();
+            }
+        }
+        return new HashCodeBuilder(3, 7)
+                .append(value)
+                .append(neighValues)
+                .hashCode();
+    }
 }

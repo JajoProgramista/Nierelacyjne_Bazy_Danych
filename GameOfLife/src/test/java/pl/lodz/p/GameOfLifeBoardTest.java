@@ -13,9 +13,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 
 
 class GameOfLifeBoardTest {
@@ -179,6 +179,101 @@ class GameOfLifeBoardTest {
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
             game.setCell(1,3,true);
         });
+
+    }
+
+    @Test
+    void validEqualsTest() {
+        GameOfLifeBoard game1 = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game2 = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+
+        GameOfLifeCell[][] board1 = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(false)}};
+        game1.setBoard(board1);
+
+        GameOfLifeCell[][] board2 = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(false)}};
+        game2.setBoard(board2);
+
+        GameOfLifeBoard game3 = game1;
+
+        assertTrue(game1.equals(game2));
+        assertTrue(game1.equals(game3));
+    }
+
+    @Test
+    void invalidEqualsTest() {
+        GameOfLifeBoard game1 = new GameOfLifeBoard(4,4, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game2 = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+
+        GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
+                new GameOfLifeCell(true), new GameOfLifeCell(false)},
+                {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(true), new GameOfLifeCell(false)}, {new GameOfLifeCell(false),
+                new GameOfLifeCell(false), new GameOfLifeCell(false), new GameOfLifeCell(false)},
+                {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(false), new GameOfLifeCell(false)}};
+        game1.setBoard(board);
+
+
+        assertFalse(game1.equals(game2));
+        assertFalse(game1.equals(null));
+        assertFalse(game1.equals(new PlainGameOfLifeSimulator()));
+    }
+
+    @Test
+    void toStringMethodTest() {
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(false)}};
+        game.setBoard(board);
+
+        /*IO.println(game.toString());*/
+        String result = "GameOfLifeBoard[Plansza:\n"
+                + "=true false true \n"
+                + "false false true \n"
+                + "false false false \n"
+                + ",Rodzaj symulacji: =PlainGameOfLifeSimulator]";
+
+        assertEquals(result, game.toString());
+
+    }
+
+    @Test
+    void hashCodeTest() {
+        GameOfLifeBoard game1 = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game2 = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+
+
+        GameOfLifeCell[][] board1 = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(false)}};
+        game1.setBoard(board1);
+
+        GameOfLifeCell[][] board2 = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
+                new GameOfLifeCell(false)}};
+        game2.setBoard(board2);
+
+        assertEquals(game1.hashCode(), game2.hashCode());
+        assertTrue(game1.equals(game2));
+
+        GameOfLifeBoard game3 = new GameOfLifeBoard(3, 3, new PlainGameOfLifeSimulator());
+        assertNotEquals(game1.hashCode(), game3.hashCode());
+        assertFalse(game1.equals(game3));
+
+        GameOfLifeBoard game4 = game1;
+        assertEquals(game1.hashCode(), game4.hashCode());
+        assertTrue(game1.equals(game4));
+
 
     }
 }

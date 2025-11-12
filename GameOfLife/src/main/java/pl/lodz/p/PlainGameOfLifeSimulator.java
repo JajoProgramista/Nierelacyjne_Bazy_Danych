@@ -31,4 +31,5 @@ public class PlainGameOfLifeSimulator implements GameOfLifeSimulator {
         cellsNextState.forEach((cell, value) -> cell.updateState(value));
 
     }
+
 }
