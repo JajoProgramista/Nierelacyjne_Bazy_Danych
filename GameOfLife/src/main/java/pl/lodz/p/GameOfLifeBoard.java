@@ -56,14 +56,13 @@ public class GameOfLifeBoard {
             }
         }
 
-        initializeCellsNeighbours(board);
+        initializeCellsNeighbours();
     }
 
     /**
      * Funkcja inicjalizująca sąsiadów poszczególnych komórek planszy.
-     * @param board plansza GameOfLifeBoard, tablica dwuwymiarowa
      */
-    void initializeCellsNeighbours(GameOfLifeCell[][] board) {
+    void initializeCellsNeighbours() {
         int count;
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
@@ -96,7 +95,7 @@ public class GameOfLifeBoard {
             System.arraycopy(board[i], 0, this.board[i], 0, board[0].length);
         }
 
-        initializeCellsNeighbours(this.board);
+        initializeCellsNeighbours();
     }
 
     /**
@@ -219,8 +218,8 @@ public class GameOfLifeBoard {
         }
 
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
-                .append("Plansza:\n", boardValues)
-                .append("Rodzaj symulacji: ", simulationType.getClass().getSimpleName())
+                .append("\n", boardValues)
+                .append("\n", simulationType.getClass().getSimpleName())
                 .toString();
     }
 
