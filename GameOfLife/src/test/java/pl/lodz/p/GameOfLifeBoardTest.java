@@ -234,14 +234,15 @@ class GameOfLifeBoardTest {
                 new GameOfLifeCell(false)}};
         game.setBoard(board);
 
-        /*IO.println(game.toString());*/
-        String result = "GameOfLifeBoard[Plansza:\n"
+        IO.println(game.toString());
+        String result = "GameOfLifeBoard[\n"
                 + "=true false true \n"
                 + "false false true \n"
                 + "false false false \n"
-                + ",Rodzaj symulacji: =PlainGameOfLifeSimulator]";
+                + ",\n"
+                + "=PlainGameOfLifeSimulator]";
 
-        //assertEquals(result, game.toString());
+        assertEquals(result, game.toString());
 
     }
 

@@ -198,6 +198,7 @@ public class GameOfLifeCell {
     @Override
     public int hashCode() {
         boolean[] neighValues = new boolean[neighbourCells.length];
+
         for (int i = 0; i < neighValues.length; i++) {
             if (neighbourCells[i] != null) {
                 neighValues[i] = neighbourCells[i].getCellValue();

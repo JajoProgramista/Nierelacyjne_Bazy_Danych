@@ -1,6 +1,9 @@
 package pl.lodz.p;
 
+import java.io.FileNotFoundException;
+
 public interface Dao<T> {
-    public T read();
-    public void write(T obj);
+    T read() throws FileNotFoundException;
+
+    void write(T obj) throws FileNotFoundException;
 }
