@@ -5,8 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pl.lodz.p</groupId>
-    <artifactId>LabyJava</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>GameOfLife</artifactId>
+    <version>2.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
     <developers>
         <developer>
@@ -20,6 +21,11 @@
             <email>254785@edu.p.lodz.pl</email>
         </developer>
     </developers>
+
+    <modules>
+        <module>Model</module>
+        <module>View</module>
+    </modules>
 
     <description>Projekt grupy laboratoryjnej MJ_CZ_1030_06</description>
 

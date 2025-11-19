@@ -3,6 +3,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .kotlin
+View/.mvn
+View/mvnw
+View/mvnw.cmd
+
 
 ### IntelliJ IDEA ###
 .idea/
