@@ -14,6 +14,11 @@ public class FileGameOfLifeDaoFactory implements Dao<GameOfLifeBoard> {
         this.filename = filename;
     }
 
+    /**
+     * metoda zczytująca z pliku układ komórek.
+     *
+     * @throws FileNotFoundException gdy plik nie istnieje
+     */
     @Override
     public GameOfLifeBoard read() throws FileNotFoundException {
         List<String> lines = new ArrayList<>();
@@ -45,6 +50,11 @@ public class FileGameOfLifeDaoFactory implements Dao<GameOfLifeBoard> {
         return board;
     }
 
+    /**
+     * metoda zapisująca układ komórek do pliku.
+     *
+     * @throws FileNotFoundException gdy plik nie istnieje
+     */
     @Override
     public void write(GameOfLifeBoard obj) throws FileNotFoundException {
         StringBuilder sb = new StringBuilder();
