@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class GameOfLifeBoardInfoTest {
     @Test
     void getRowTest() {
-        GameOfLifeBoard game = new GameOfLifeBoard(3, 3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3, 3,DensityLevel.LOW, new PlainGameOfLifeSimulator());
 
         // 1 0 1
         // 0 0 1
@@ -42,7 +42,7 @@ class GameOfLifeBoardInfoTest {
 
     @Test
     void getColTest() {
-        GameOfLifeBoard game = new GameOfLifeBoard(4, 3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(4, 3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
 
         // 1 0 1
         // 0 0 1
@@ -80,7 +80,7 @@ class GameOfLifeBoardInfoTest {
 
     @Test
     void rowIndexOutOfBoundTest() {
-        GameOfLifeBoard game = new GameOfLifeBoard(3, 3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3, 3,DensityLevel.LOW, new PlainGameOfLifeSimulator());
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
             game.getRow(3);
         });
@@ -92,7 +92,7 @@ class GameOfLifeBoardInfoTest {
 
     @Test
     void columnIndexOutOfBoundTest() {
-        GameOfLifeBoard game = new GameOfLifeBoard(3, 3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3, 3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
             game.getColumn(3);
         });
@@ -104,7 +104,7 @@ class GameOfLifeBoardInfoTest {
 
     @Test
     void listenerObserverTest() {
-        GameOfLifeBoard game = new GameOfLifeBoard(4, 3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(4, 3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         // 1 0 1
         // 0 0 1
         // 0 0 0
@@ -274,7 +274,7 @@ class GameOfLifeBoardInfoTest {
 
     @Test
     void cloneTest() throws CloneNotSupportedException {
-        GameOfLifeBoard board = new GameOfLifeBoard(3, 3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard board = new GameOfLifeBoard(3, 3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         GameOfLifeRow row = board.getRow(1);
         GameOfLifeColumn col = board.getColumn(1);
 

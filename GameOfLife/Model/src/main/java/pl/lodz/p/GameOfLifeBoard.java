@@ -11,9 +11,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Klasa odpowiedzialna za tworzenie planszy, oraz ustalanie
@@ -30,11 +28,12 @@ public class GameOfLifeBoard implements Cloneable {
      *
      * @param height ilość wierszy planszy
      * @param width ilość kolumn planszy
+     * @param d gęstość komórek
      * @param simulationType typ symulacji jako klasa interfejsu GameOfLifeSimulator
      * @throws NullPointerException jeżeli typ symulacji będzie nullem
      * @throws IndexOutOfBoundsException jeżeli wiersz lub kolumna < 1
      */
-    public GameOfLifeBoard(int height, int width, GameOfLifeSimulator simulationType) {
+    public GameOfLifeBoard(int height, int width, DensityLevel d, GameOfLifeSimulator simulationType) {
         if (height < 1) {
             throw new IndexOutOfBoundsException("Nieprawidłowa wysokość planszy, min: 1");
         }
@@ -46,16 +45,47 @@ public class GameOfLifeBoard implements Cloneable {
         if (simulationType == null) {
             throw new NullPointerException("Podaj poprawny rodzaj symulacji! Nie Null");
         }
+
+        int howManyCells;
+        if (d.equals(DensityLevel.LOW)) {
+            howManyCells = (int) Math.floor(0.1 * height * width);
+        } else if (d.equals(DensityLevel.MEDIUM)) {
+            howManyCells = (int) Math.floor(0.3 * height * width);
+        } else {
+            howManyCells = (int) Math.floor(0.5 * height * width);
+        }
+
         this.simulationType = simulationType;
 
         board = new GameOfLifeCell[height][width];
         Random r = new Random();
+
+        int k = 1;
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                board[i][j] = new GameOfLifeCell(r.nextBoolean());
+                if (k <= howManyCells) {
+                    board[i][j] = new GameOfLifeCell(true);
+                    k++;
+                } else {
+                    board[i][j] = new GameOfLifeCell(false);
+                }
             }
         }
 
+        List<GameOfLifeCell> tempList = new ArrayList<GameOfLifeCell>();
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                tempList.add(board[i][j]);
+            }
+        }
+
+        Collections.shuffle(tempList);
+
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                board[i][j] = tempList.get(i * width + j);
+            }
+        }
         initializeCellsNeighbours(this.board);
     }
 
@@ -103,7 +133,7 @@ public class GameOfLifeBoard implements Cloneable {
      *
      * @return tablica dwuwymiarowa boolean
      */
-    GameOfLifeCell[][] getBoard() {
+    public GameOfLifeCell[][] getBoard() {
         GameOfLifeCell[][] boardCopy = new GameOfLifeCell[board.length][board[0].length];
         for (int i = 0; i < board.length; i++) {
             System.arraycopy(board[i], 0, boardCopy[i], 0, board[0].length);

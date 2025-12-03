@@ -25,7 +25,7 @@ public class PlainGameOfLifeSimulatorTest {
                 new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
                 new GameOfLifeCell(false)}};
 
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         game.setBoard(board);
 
 
@@ -45,7 +45,7 @@ public class PlainGameOfLifeSimulatorTest {
                         {new GameOfLifeCell(false), new GameOfLifeCell(false), new GameOfLifeCell(false)},
                         {new GameOfLifeCell(true), new GameOfLifeCell(false),
                                 new GameOfLifeCell(true)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         game.setBoard(board);
 
         assertFalse(game.getBoard()[0][0].getCellValue());
@@ -66,7 +66,7 @@ public class PlainGameOfLifeSimulatorTest {
                         {new GameOfLifeCell(false), new GameOfLifeCell(false),
                                 new GameOfLifeCell(false)}};
 
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         game.setBoard(board);
 
         assertFalse(game.getBoard()[1][1].getCellValue());
@@ -85,7 +85,7 @@ public class PlainGameOfLifeSimulatorTest {
                         {new GameOfLifeCell(false), new GameOfLifeCell(false), new GameOfLifeCell(false)},
                         {new GameOfLifeCell(false), new GameOfLifeCell(false),
                                 new GameOfLifeCell(false)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         game.setBoard(board);
 
         assertFalse(game.getBoard()[1][1].getCellValue());
@@ -104,7 +104,7 @@ public class PlainGameOfLifeSimulatorTest {
                         {new GameOfLifeCell(false), new GameOfLifeCell(false), new GameOfLifeCell(false)},
                         {new GameOfLifeCell(false), new GameOfLifeCell(false),
                                 new GameOfLifeCell(false)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         game.setBoard(board);
 
         assertFalse(game.getBoard()[0][0].getCellValue());
@@ -123,7 +123,7 @@ public class PlainGameOfLifeSimulatorTest {
                         {new GameOfLifeCell(false), new GameOfLifeCell(false), new GameOfLifeCell(false)},
                         {new GameOfLifeCell(true), new GameOfLifeCell(false),
                                 new GameOfLifeCell(false)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         game.setBoard(board);
 
         assertTrue(game.getBoard()[0][0].getCellValue());
@@ -142,7 +142,7 @@ public class PlainGameOfLifeSimulatorTest {
                         {new GameOfLifeCell(true), new GameOfLifeCell(true), new GameOfLifeCell(false)},
                         {new GameOfLifeCell(false), new GameOfLifeCell(false),
                                 new GameOfLifeCell(false)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         game.setBoard(board);
 
         assertTrue(game.getBoard()[0][0].getCellValue());
@@ -161,7 +161,7 @@ public class PlainGameOfLifeSimulatorTest {
                         {new GameOfLifeCell(false), new GameOfLifeCell(false), new GameOfLifeCell(false)},
                         {new GameOfLifeCell(true), new GameOfLifeCell(false),
                                 new GameOfLifeCell(true)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         game.setBoard(board);
 
         assertTrue(game.getBoard()[0][0].getCellValue());
@@ -180,7 +180,7 @@ public class PlainGameOfLifeSimulatorTest {
                         {new GameOfLifeCell(false), new GameOfLifeCell(false), new GameOfLifeCell(false)},
                         {new GameOfLifeCell(false), new GameOfLifeCell(false),
                                 new GameOfLifeCell(false)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         game.setBoard(board);
 
         assertTrue(game.getBoard()[0][0].getCellValue());
@@ -199,7 +199,7 @@ public class PlainGameOfLifeSimulatorTest {
                         {new GameOfLifeCell(false), new GameOfLifeCell(false), new GameOfLifeCell(false)},
                         {new GameOfLifeCell(false), new GameOfLifeCell(false),
                                 new GameOfLifeCell(true)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         game.setBoard(board);
 
         assertTrue(game.getBoard()[0][0].getCellValue());
@@ -218,7 +218,7 @@ public class PlainGameOfLifeSimulatorTest {
                         {new GameOfLifeCell(true), new GameOfLifeCell(true), new GameOfLifeCell(true)},
                         {new GameOfLifeCell(false), new GameOfLifeCell(true),
                                 new GameOfLifeCell(false)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         game.setBoard(board);
 
         assertTrue(game.getBoard()[1][1].getCellValue());
@@ -237,7 +237,7 @@ public class PlainGameOfLifeSimulatorTest {
                         {new GameOfLifeCell(false), new GameOfLifeCell(true), new GameOfLifeCell(true)},
                         {new GameOfLifeCell(false), new GameOfLifeCell(true),
                                 new GameOfLifeCell(true)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         game.setBoard(board);
 
         assertTrue(game.getBoard()[0][0].getCellValue());

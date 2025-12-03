@@ -15,7 +15,7 @@ class FileGameOfLifeDaoFactoryTest {
     void readTest() throws FileNotFoundException {
         FileGameOfLifeDaoFactory d1 =
                 (FileGameOfLifeDaoFactory) GameOfLifeBoardDaoFactory.getFileDao("plik_testowy1.txt");
-        GameOfLifeBoard game = new GameOfLifeBoard(5, 5, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(5, 5, DensityLevel.LOW, new PlainGameOfLifeSimulator());
 
         d1.write(game);
         GameOfLifeBoard game2 = d1.read();

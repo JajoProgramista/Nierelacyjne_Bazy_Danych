@@ -20,20 +20,38 @@ class GameOfLifeBoardTest {
 
     @Test
     void constructorSizeBoardTestHeightShouldBe4WidthShouldBe8() {
-        GameOfLifeBoard board = new GameOfLifeBoard(4,8, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard board = new GameOfLifeBoard(4,8, DensityLevel.LOW, new PlainGameOfLifeSimulator());
 
         GameOfLifeCell[][] testingBoard = board.getBoard();
         assertEquals(4, testingBoard.length);
         assertEquals(8, testingBoard[0].length);
 
+        int cells = 0;
+
+        for (int i = 0; i < testingBoard.length; i++) {
+            for (int j = 0; j < testingBoard[0].length; j++) {
+                if(testingBoard[i][j].getCellValue()) cells++;
+            }
+        }
+
+        assertEquals(cells, 3);
     }
 
 
     @Test
     void anotherConstructorCallGeneratesDifferentCellsOnBoard() {
-        GameOfLifeBoard firstBoard = new GameOfLifeBoard(8,8, new PlainGameOfLifeSimulator());
-        GameOfLifeBoard secondBoard = new GameOfLifeBoard(8,8, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard firstBoard = new GameOfLifeBoard(8,8, DensityLevel.MEDIUM, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard secondBoard = new GameOfLifeBoard(8,8, DensityLevel.MEDIUM, new PlainGameOfLifeSimulator());
 
+        int cells = 0;
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(firstBoard.getBoard()[i][j].getCellValue()) cells++;
+            }
+        }
+
+        assertEquals(cells, 19);
 
         boolean checkIsTheSame = true;
         for (int i = 0; i < firstBoard.getBoard().length; i++) {
@@ -52,24 +70,34 @@ class GameOfLifeBoardTest {
     @Test
     void invalidBoardSizeConstructorTest() {
         assertThrows(IndexOutOfBoundsException.class, () -> {
-            GameOfLifeBoard game = new GameOfLifeBoard(0, 1, new PlainGameOfLifeSimulator());
+            GameOfLifeBoard game = new GameOfLifeBoard(0, 1, DensityLevel.HIGH, new PlainGameOfLifeSimulator());
         });
 
         assertThrows(IndexOutOfBoundsException.class, () -> {
-            GameOfLifeBoard game = new GameOfLifeBoard(1, 0, new PlainGameOfLifeSimulator());
+            GameOfLifeBoard game = new GameOfLifeBoard(1, 0, DensityLevel.HIGH, new PlainGameOfLifeSimulator());
         });
     }
 
     @Test
     void nullSimulationTypeShouldThrowsException() {
         assertThrows(NullPointerException.class, () -> {
-            GameOfLifeBoard game = new GameOfLifeBoard(3, 3, null);
+            GameOfLifeBoard game = new GameOfLifeBoard(3, 3, DensityLevel.LOW, null);
         });
     }
 
     @Test
     void getBoardTest() {
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.HIGH, new PlainGameOfLifeSimulator());
+
+        int cells = 0;
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if(game.getBoard()[i][j].getCellValue()) cells++;
+            }
+        }
+
+        assertEquals(cells, 4);
 
         GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
                 new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
@@ -105,7 +133,7 @@ class GameOfLifeBoardTest {
                 new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
                 new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
                 new GameOfLifeCell(false)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         game.setBoard(board);
 
         assertFalse(game.getCell(0,1));
@@ -114,7 +142,7 @@ class GameOfLifeBoardTest {
 
     @Test
     void invalidRowIndexGetCellTest() {
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
             game.getCell(-1,1);
         });
@@ -127,7 +155,7 @@ class GameOfLifeBoardTest {
 
     @Test
     void invalidColumnIndexGetCellTest() {
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
             game.getCell(0,-1);
         });
@@ -138,7 +166,7 @@ class GameOfLifeBoardTest {
 
     @Test
     void validSetCellTest() {
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
 
         GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
                 new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
@@ -154,7 +182,7 @@ class GameOfLifeBoardTest {
 
     @Test
     void invalidRowIndexSetCellTest() {
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
 
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
             game.setCell(-1,1,true);
@@ -168,7 +196,7 @@ class GameOfLifeBoardTest {
 
     @Test
     void invalidColIndexSetCellTest() {
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
 
         assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
             game.setCell(1,-1,true);
@@ -182,8 +210,8 @@ class GameOfLifeBoardTest {
 
     @Test
     void validEqualsTest() {
-        GameOfLifeBoard game1 = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
-        GameOfLifeBoard game2 = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game1 = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game2 = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
 
         GameOfLifeCell[][] board1 = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
                 new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
@@ -205,8 +233,8 @@ class GameOfLifeBoardTest {
 
     @Test
     void invalidEqualsTest() {
-        GameOfLifeBoard game1 = new GameOfLifeBoard(4,4, new PlainGameOfLifeSimulator());
-        GameOfLifeBoard game2 = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game1 = new GameOfLifeBoard(4,4, DensityLevel.LOW, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game2 = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
 
         GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
                 new GameOfLifeCell(true), new GameOfLifeCell(false)},
@@ -225,7 +253,7 @@ class GameOfLifeBoardTest {
 
     @Test
     void toStringMethodTest() {
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
                 new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
                 new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
@@ -246,8 +274,8 @@ class GameOfLifeBoardTest {
 
     @Test
     void hashCodeTest() {
-        GameOfLifeBoard game1 = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
-        GameOfLifeBoard game2 = new GameOfLifeBoard(3,3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game1 = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game2 = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
 
 
         GameOfLifeCell[][] board1 = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
@@ -265,7 +293,7 @@ class GameOfLifeBoardTest {
         assertEquals(game1.hashCode(), game2.hashCode());
         assertTrue(game1.equals(game2));
 
-        GameOfLifeBoard game3 = new GameOfLifeBoard(3, 3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game3 = new GameOfLifeBoard(3, 3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         assertNotEquals(game1.hashCode(), game3.hashCode());
         assertFalse(game1.equals(game3));
 
@@ -277,7 +305,7 @@ class GameOfLifeBoardTest {
 
     @Test
     void cloneTest() throws CloneNotSupportedException {
-        GameOfLifeBoard board = new GameOfLifeBoard(3, 3, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard board = new GameOfLifeBoard(3, 3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
         GameOfLifeCell cell1 = board.getBoard()[0][0];
         GameOfLifeCell[] cell1Neigbours = cell1.getNeighbourCells();
 
