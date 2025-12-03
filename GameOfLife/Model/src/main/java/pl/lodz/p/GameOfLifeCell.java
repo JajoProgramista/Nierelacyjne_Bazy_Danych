@@ -15,7 +15,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 
-public class GameOfLifeCell {
+public class GameOfLifeCell implements Cloneable, Comparable<GameOfLifeCell> {
     private boolean value;
     private GameOfLifeCell[] neighbourCells;
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
@@ -35,7 +35,7 @@ public class GameOfLifeCell {
      */
     void setNeighboursList(GameOfLifeCell[] neighbours) {
         if (neighbours == null) {
-            throw new NullPointerException("Komórka sąsiadująca nie może być nullem!");
+            throw new NullPointerException("Komórki sąsiadujące nie mogą być nullem!");
         }
 
         neighbourCells = neighbours;
@@ -61,8 +61,7 @@ public class GameOfLifeCell {
                 continue;
             }
 
-            boolean value = neighbourCells[i].getCellValue();
-            copyOfNeighCells[i] = new GameOfLifeCell(value);
+            copyOfNeighCells[i] = neighbourCells[i];
         }
 
         return copyOfNeighCells;
@@ -208,5 +207,23 @@ public class GameOfLifeCell {
                 .append(value)
                 .append(neighValues)
                 .hashCode();
+    }
+
+    @Override
+    public GameOfLifeCell clone() throws CloneNotSupportedException {
+        try {
+            GameOfLifeCell clone = (GameOfLifeCell) super.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new CloneNotSupportedException();
+        }
+    }
+
+    @Override
+    public int compareTo(GameOfLifeCell cell) {
+        if (cell == null) {
+            throw new NullPointerException();
+        }
+        return Boolean.compare(this.value, cell.value);
     }
 }

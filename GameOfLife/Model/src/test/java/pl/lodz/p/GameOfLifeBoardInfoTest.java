@@ -15,6 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -269,5 +270,18 @@ class GameOfLifeBoardInfoTest {
         assertNotEquals(row1.hashCode(), row2.hashCode());
         assertFalse(row1.equals(row2));
 
+    }
+
+    @Test
+    void cloneTest() throws CloneNotSupportedException {
+        GameOfLifeBoard board = new GameOfLifeBoard(3, 3, new PlainGameOfLifeSimulator());
+        GameOfLifeRow row = board.getRow(1);
+        GameOfLifeColumn col = board.getColumn(1);
+
+        GameOfLifeRow rowCopy = (GameOfLifeRow) row.clone();
+        GameOfLifeColumn colCopy = (GameOfLifeColumn) col.clone();
+
+        assertNotSame(row, rowCopy);
+        assertNotSame(col, colCopy);
     }
 }

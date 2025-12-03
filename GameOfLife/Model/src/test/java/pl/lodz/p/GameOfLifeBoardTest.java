@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -272,6 +273,45 @@ class GameOfLifeBoardTest {
         assertEquals(game1.hashCode(), game4.hashCode());
         assertTrue(game1.equals(game4));
 
+    }
 
+    @Test
+    void cloneTest() throws CloneNotSupportedException {
+        GameOfLifeBoard board = new GameOfLifeBoard(3, 3, new PlainGameOfLifeSimulator());
+        GameOfLifeCell cell1 = board.getBoard()[0][0];
+        GameOfLifeCell[] cell1Neigbours = cell1.getNeighbourCells();
+
+        GameOfLifeBoard boardCopy = board.clone();
+        GameOfLifeCell cell1Copy = boardCopy.getBoard()[0][0];
+        GameOfLifeCell[] cell1CopyNeigbours = cell1Copy.getNeighbourCells();
+
+        boolean isCellsTheSame = false;
+        for (int i = 0; i < board.getBoard().length; i++) {
+            for (int j = 0; j < board.getBoard()[0].length; j++) {
+                if (board.getBoard()[i][j] == boardCopy.getBoard()[i][j]) {
+                    isCellsTheSame = true;
+                    break;
+                }
+            }
+        }
+
+        boolean isNeighboursTheSame = false;
+        for (int i = 0; i < cell1Neigbours.length; i++) {
+            if (cell1Neigbours[i] == cell1CopyNeigbours[i]) {
+                isNeighboursTheSame = true;
+                break;
+            }
+        }
+
+        boolean isNeigboursCopyNull = false;
+        for (int i = 0; i < cell1CopyNeigbours.length; i++) {
+            if (cell1CopyNeigbours[i] == null) {
+                isNeigboursCopyNull = true;
+            }
+        }
+        assertNotSame(board, boardCopy);
+        assertFalse(isCellsTheSame);
+        assertFalse(isNeighboursTheSame);
+        assertFalse(isNeigboursCopyNull);
     }
 }

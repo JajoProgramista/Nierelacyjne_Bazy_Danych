@@ -15,7 +15,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
-public abstract class GameOfLifeBoardInfo implements PropertyChangeListener {
+public abstract class GameOfLifeBoardInfo implements PropertyChangeListener, Cloneable {
     private final List<GameOfLifeCell> line;
     private int aliveCells;
     private int deadCells;
@@ -171,5 +171,18 @@ public abstract class GameOfLifeBoardInfo implements PropertyChangeListener {
                 .append(aliveCells)
                 .append(deadCells)
                 .toHashCode();
+    }
+
+    @Override
+    public GameOfLifeBoardInfo clone() throws CloneNotSupportedException {
+        try {
+            GameOfLifeBoardInfo clone = (GameOfLifeBoardInfo) super.clone();
+            for (int i = 0; i < this.line.size(); i++) {
+                clone.line.set(i, this.line.get(i).clone());
+            }
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new CloneNotSupportedException();
+        }
     }
 }

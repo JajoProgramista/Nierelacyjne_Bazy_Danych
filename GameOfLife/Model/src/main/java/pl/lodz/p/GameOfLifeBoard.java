@@ -19,7 +19,7 @@ import java.util.Random;
  * Klasa odpowiedzialna za tworzenie planszy, oraz ustalanie
  * wartości komórek tej planszy w kolejnych posunięciach.
  */
-public class GameOfLifeBoard {
+public class GameOfLifeBoard implements Cloneable {
 
     private GameOfLifeCell[][] board;
     private final GameOfLifeSimulator simulationType;
@@ -56,13 +56,13 @@ public class GameOfLifeBoard {
             }
         }
 
-        initializeCellsNeighbours();
+        initializeCellsNeighbours(this.board);
     }
 
     /**
      * Funkcja inicjalizująca sąsiadów poszczególnych komórek planszy.
      */
-    void initializeCellsNeighbours() {
+    void initializeCellsNeighbours(GameOfLifeCell[][] board) {
         int count;
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[0].length; j++) {
@@ -95,7 +95,7 @@ public class GameOfLifeBoard {
             System.arraycopy(board[i], 0, this.board[i], 0, board[0].length);
         }
 
-        initializeCellsNeighbours();
+        initializeCellsNeighbours(this.board);
     }
 
     /**
@@ -279,6 +279,26 @@ public class GameOfLifeBoard {
                 .append(boardValues)
                 .append(simulationType.getClass())
                 .hashCode();
+    }
+
+
+    @Override
+    public GameOfLifeBoard clone() throws CloneNotSupportedException {
+        try {
+            GameOfLifeBoard clone = (GameOfLifeBoard) super.clone();
+            clone.board = new GameOfLifeCell[this.board.length][this.board[0].length];
+
+            for (int i = 0; i < this.board.length; i++) {
+                for (int j = 0; j < this.board[0].length; j++) {
+                    clone.board[i][j] = this.board[i][j].clone();
+                }
+            }
+
+            clone.initializeCellsNeighbours(clone.board);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new CloneNotSupportedException();
+        }
     }
 }
 

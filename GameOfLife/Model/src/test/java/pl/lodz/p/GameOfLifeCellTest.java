@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -127,5 +128,28 @@ class GameOfLifeCellTest {
         assertNotEquals(cell3.hashCode(), cell2.hashCode());
         assertFalse(cell3.equals(cell2));
 
+    }
+
+    @Test
+    void cloneTest() throws CloneNotSupportedException {
+        GameOfLifeCell cell = new GameOfLifeCell(true);
+        GameOfLifeCell cellCopy = cell.clone();
+
+        assertNotSame(cell, cellCopy);
+    }
+
+    @Test
+    void compareTest() {
+        GameOfLifeCell cell = new GameOfLifeCell(true);
+        GameOfLifeCell cell2 = new GameOfLifeCell(false);
+        GameOfLifeCell cell3 = new GameOfLifeCell(true);
+
+        assertThrows(NullPointerException.class, () -> {
+            cell.compareTo(null);
+        });
+
+        assertEquals(0, cell.compareTo(cell3));
+        assertEquals(1, cell.compareTo(cell2));
+        assertEquals(-1, cell2.compareTo(cell));
     }
 }
