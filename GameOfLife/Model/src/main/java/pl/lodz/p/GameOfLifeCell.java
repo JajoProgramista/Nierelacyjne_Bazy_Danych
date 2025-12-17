@@ -83,7 +83,7 @@ public class GameOfLifeCell implements Cloneable, Comparable<GameOfLifeCell> {
         }
 
         if (this.value) {
-            if (aliveNeigbours == 1 || aliveNeigbours > 3) {
+            if (aliveNeigbours <= 1 || aliveNeigbours > 3) {
                 return false;
             }
         } else {

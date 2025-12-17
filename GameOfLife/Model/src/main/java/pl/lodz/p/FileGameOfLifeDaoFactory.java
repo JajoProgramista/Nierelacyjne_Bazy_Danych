@@ -38,6 +38,7 @@ public class FileGameOfLifeDaoFactory implements Dao<GameOfLifeBoard> {
 
         GameOfLifeBoard board = new GameOfLifeBoard(lines.getFirst().length(),
                 lines.size(), DensityLevel.LOW, new PlainGameOfLifeSimulator());
+
         GameOfLifeCell[][] tab = new GameOfLifeCell[lines.size()][lines.getFirst().length()];
         for (int i = 0; i < lines.size(); i++) {
             for (int j = 0; j < lines.getFirst().length(); j++) {

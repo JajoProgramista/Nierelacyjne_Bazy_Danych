@@ -48,11 +48,11 @@ public class GameOfLifeBoard implements Cloneable {
 
         int howManyCells;
         if (d.equals(DensityLevel.LOW)) {
-            howManyCells = (int) Math.floor(0.1 * height * width);
+            howManyCells = (int) Math.ceil(0.1 * height * width);
         } else if (d.equals(DensityLevel.MEDIUM)) {
-            howManyCells = (int) Math.floor(0.3 * height * width);
+            howManyCells = (int) Math.ceil(0.3 * height * width);
         } else {
-            howManyCells = (int) Math.floor(0.5 * height * width);
+            howManyCells = (int) Math.ceil(0.5 * height * width);
         }
 
         this.simulationType = simulationType;
@@ -119,7 +119,7 @@ public class GameOfLifeBoard implements Cloneable {
      *
      * @param board tablica dwuwymiarowa boolean
      */
-    void setBoard(GameOfLifeCell[][] board) {
+    public void setBoard(GameOfLifeCell[][] board) {
         this.board = new GameOfLifeCell[board.length][board[0].length];
         for (int i = 0; i < board.length; i++) {
             System.arraycopy(board[i], 0, this.board[i], 0, board[0].length);
@@ -311,7 +311,6 @@ public class GameOfLifeBoard implements Cloneable {
                 .hashCode();
     }
 
-
     @Override
     public GameOfLifeBoard clone() throws CloneNotSupportedException {
         try {
@@ -329,6 +328,11 @@ public class GameOfLifeBoard implements Cloneable {
         } catch (CloneNotSupportedException e) {
             throw new CloneNotSupportedException();
         }
+    }
+
+
+    public void reverseCellValue(int x, int y) {
+        board[x][y].updateState(!board[x][y].getCellValue());
     }
 }
 
