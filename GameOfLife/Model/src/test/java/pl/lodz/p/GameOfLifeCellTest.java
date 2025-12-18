@@ -23,7 +23,7 @@ class GameOfLifeCellTest {
     @Test
     void setNullNeigboursListShouldThrowException() {
         GameOfLifeCell cell = new GameOfLifeCell(true, new Locale("pl"));
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(GameOfLifeExceptions.NoneNeigboursException.class, () -> {
           cell.setNeighboursList(null);
         });
     }
@@ -146,7 +146,7 @@ class GameOfLifeCellTest {
         GameOfLifeCell cell2 = new GameOfLifeCell(false, new Locale("pl"));
         GameOfLifeCell cell3 = new GameOfLifeCell(true, new Locale("pl"));
 
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(GameOfLifeExceptions.NullException.class, () -> {
             cell.compareTo(null);
         });
 

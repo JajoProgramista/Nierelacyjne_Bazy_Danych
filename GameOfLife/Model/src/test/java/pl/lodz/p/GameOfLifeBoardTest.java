@@ -25,7 +25,7 @@ class GameOfLifeBoardTest {
     @Test
     void constructorSizeBoardTestHeightShouldBe4WidthShouldBe8() {
         GameOfLifeBoard board = new GameOfLifeBoard(4,8, DensityLevel.LOW, new PlainGameOfLifeSimulator(),
-                new Locale("pl"));
+                new Locale("en"));
 
         GameOfLifeCell[][] testingBoard = board.getBoard();
         assertEquals(4, testingBoard.length);
@@ -39,7 +39,7 @@ class GameOfLifeBoardTest {
             }
         }
 
-        assertEquals(cells, 3);
+        assertEquals(cells, 4);
     }
 
 
@@ -58,7 +58,7 @@ class GameOfLifeBoardTest {
             }
         }
 
-        assertEquals(cells, 19);
+        assertEquals(cells, 20);
 
         boolean checkIsTheSame = true;
         for (int i = 0; i < firstBoard.getBoard().length; i++) {
@@ -78,12 +78,12 @@ class GameOfLifeBoardTest {
     void invalidBoardSizeConstructorTest() {
         assertThrows(InvalidBoardSizeException.class, () -> {
             GameOfLifeBoard game = new GameOfLifeBoard(0, 1, DensityLevel.HIGH, new PlainGameOfLifeSimulator(),
-                    new Locale("pl"));
+                    new Locale("en"));
         });
 
         assertThrows(InvalidBoardSizeException.class, () -> {
             GameOfLifeBoard game = new GameOfLifeBoard(1, 0, DensityLevel.HIGH, new PlainGameOfLifeSimulator(),
-                    new Locale("pl"));
+                    new Locale("en"));
         });
     }
 
@@ -108,7 +108,7 @@ class GameOfLifeBoardTest {
             }
         }
 
-        assertEquals(cells, 4);
+        assertEquals(cells, 5);
 
         GameOfLifeCell[][] board = {{new GameOfLifeCell(true, new Locale("pl")),new GameOfLifeCell(false, new Locale("pl")),
                 new GameOfLifeCell(true, new Locale("pl"))}, {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),

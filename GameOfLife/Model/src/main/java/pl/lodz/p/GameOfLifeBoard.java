@@ -44,15 +44,15 @@ public class GameOfLifeBoard implements Cloneable {
         bundle = ResourceBundle.getBundle("exceptions", locale);
 
         if (height < 1) {
-            throw new InvalidBoardSizeException(bundle.getString("outOfBoundsHeight"));
+            throw new InvalidBoardSizeException("");
         }
 
         if (width < 1) {
-            throw new InvalidBoardSizeException(bundle.getString("outOfBoundsWidth"));
+            throw new InvalidBoardSizeException("");
         }
 
         if (simulationType == null) {
-            throw new NullException(bundle.getString("nullPointer"));
+            throw new NullException("");
         }
 
         int howManyCells;
@@ -160,10 +160,10 @@ public class GameOfLifeBoard implements Cloneable {
      */
     private void validateIndex(int x, int y) {
         if (x < 0 || x >= board.length) {
-            throw new InvalidBoardSizeException(bundle.getString("invalidRow"));
+            throw new InvalidBoardSizeException("");
         }
         if (y < 0 || y >= board[0].length) {
-            throw new InvalidBoardSizeException(bundle.getString("invalidCol"));
+            throw new InvalidBoardSizeException("invalidCol");
         }
     }
 
@@ -201,7 +201,7 @@ public class GameOfLifeBoard implements Cloneable {
      */
     public GameOfLifeRow getRow(int x) {
         if (x < 0 || x >= board.length) {
-            throw new InvalidBoardSizeException(bundle.getString("invalidRow"));
+            throw new InvalidBoardSizeException("invalidRow");
         }
 
         List<GameOfLifeCell> tempRow = Arrays.asList(new GameOfLifeCell[board[0].length]);
@@ -220,7 +220,7 @@ public class GameOfLifeBoard implements Cloneable {
      */
     public GameOfLifeColumn getColumn(int y) {
         if (y < 0 || y >= board[0].length) {
-            throw new InvalidBoardSizeException(bundle.getString("invalidCol"));
+            throw new InvalidBoardSizeException("invalidCol");
         }
 
         List<GameOfLifeCell> tempCol = Arrays.asList(new GameOfLifeCell[board.length]);

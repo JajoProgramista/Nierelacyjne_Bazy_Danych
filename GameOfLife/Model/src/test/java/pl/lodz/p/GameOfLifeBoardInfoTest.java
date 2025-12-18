@@ -70,7 +70,7 @@ class GameOfLifeBoardInfoTest {
 
     @Test
     void nullRowGivenShouldThrowException() {
-        assertThrows(NullPointerException.class, () -> {
+        assertThrows(NoneLineException.class, () -> {
            GameOfLifeRow row = new GameOfLifeRow(null, new Locale("pl"));
         });
     }
