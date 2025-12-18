@@ -28,7 +28,7 @@ public class GameOfLifeScene {
 
     public GameOfLifeScene(int height, int width, DensityLevel density, PlainGameOfLifeSimulator plainGameOfLifeSimulator,
                            Locale locale) {
-        game = new GameOfLifeBoard(height, width, density, new PlainGameOfLifeSimulator());
+        game = new GameOfLifeBoard(height, width, density, new PlainGameOfLifeSimulator(), locale);
 
         this.locale = locale;
         ResourceBundle bundle = ResourceBundle.getBundle("bundles.messages", locale);
@@ -76,7 +76,7 @@ public class GameOfLifeScene {
 
             if (file != null) {
                 FileGameOfLifeDaoFactory gameSaver =
-                        (FileGameOfLifeDaoFactory) GameOfLifeBoardDaoFactory.getFileDao(file.toString());
+                        (FileGameOfLifeDaoFactory) GameOfLifeBoardDaoFactory.getFileDao(file.toString(), locale);
 
                 try {
                     gameSaver.write(game);
@@ -105,7 +105,7 @@ public class GameOfLifeScene {
 
             if (file != null) {
                 FileGameOfLifeDaoFactory gameReader =
-                        (FileGameOfLifeDaoFactory) GameOfLifeBoardDaoFactory.getFileDao(file.toString());
+                        (FileGameOfLifeDaoFactory) GameOfLifeBoardDaoFactory.getFileDao(file.toString(), locale);
 
                 try {
                     game.setBoard(gameReader.read().getBoard());

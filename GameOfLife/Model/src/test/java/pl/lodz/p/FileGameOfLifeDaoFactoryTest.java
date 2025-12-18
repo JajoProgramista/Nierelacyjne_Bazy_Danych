@@ -3,6 +3,7 @@ package pl.lodz.p;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -14,8 +15,10 @@ class FileGameOfLifeDaoFactoryTest {
     @Test
     void readTest() throws FileNotFoundException {
         FileGameOfLifeDaoFactory d1 =
-                (FileGameOfLifeDaoFactory) GameOfLifeBoardDaoFactory.getFileDao("plik_testowy1.txt");
-        GameOfLifeBoard game = new GameOfLifeBoard(5, 5, DensityLevel.LOW, new PlainGameOfLifeSimulator());
+                (FileGameOfLifeDaoFactory) GameOfLifeBoardDaoFactory.getFileDao("plik_testowy1.txt",
+                        new Locale("pl"));
+        GameOfLifeBoard game = new GameOfLifeBoard(5, 5, DensityLevel.LOW, new PlainGameOfLifeSimulator(),
+                new Locale("pl"));
 
         d1.write(game);
         GameOfLifeBoard game2 = d1.read();
@@ -34,7 +37,8 @@ class FileGameOfLifeDaoFactoryTest {
     @Test
     void readNeighboursTest() throws FileNotFoundException {
         GameOfLifeBoardDaoFactory dao = new GameOfLifeBoardDaoFactory();
-        FileGameOfLifeDaoFactory d1 = (FileGameOfLifeDaoFactory) dao.getFileDao("plik_testowy.txt");
+        FileGameOfLifeDaoFactory d1 = (FileGameOfLifeDaoFactory) dao.getFileDao("plik_testowy.txt",
+                new Locale("pl"));
         GameOfLifeBoard game = d1.read();
 
         int count = 0;
@@ -50,7 +54,8 @@ class FileGameOfLifeDaoFactoryTest {
     @Test
     void invalidFileNameReadTest() {
         FileGameOfLifeDaoFactory d1 =
-                (FileGameOfLifeDaoFactory) GameOfLifeBoardDaoFactory.getFileDao("nieIstnieje.txt");
+                (FileGameOfLifeDaoFactory) GameOfLifeBoardDaoFactory.getFileDao("nieIstnieje.txt",
+                        new Locale("pl"));
         assertThrows(FileNotFoundException.class, () -> {
             d1.read();
         });

@@ -7,6 +7,7 @@
 package pl.lodz.p;
 
 import exceptions.InvalidBoardSizeException;
+import exceptions.NullException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -22,6 +23,8 @@ public class GameOfLifeBoard implements Cloneable {
 
     private GameOfLifeCell[][] board;
     private final GameOfLifeSimulator simulationType;
+    private Locale locale;
+    private ResourceBundle bundle;
 
     /**
      * Konstruktor tworzący plansze z losowymi wartościami
@@ -34,17 +37,22 @@ public class GameOfLifeBoard implements Cloneable {
      * @throws NullPointerException jeżeli typ symulacji będzie nullem
      * @throws IndexOutOfBoundsException jeżeli wiersz lub kolumna < 1
      */
-    public GameOfLifeBoard(int height, int width, DensityLevel d, GameOfLifeSimulator simulationType) {
+    public GameOfLifeBoard(int height, int width, DensityLevel d, GameOfLifeSimulator simulationType,
+                           Locale locale) {
+
+        this.locale = locale;
+        bundle = ResourceBundle.getBundle("exceptions", locale);
+
         if (height < 1) {
-            throw new InvalidBoardSizeException("");
+            throw new InvalidBoardSizeException(bundle.getString("outOfBoundsHeight"));
         }
 
         if (width < 1) {
-            throw new IndexOutOfBoundsException("Nieprawidłowa szerokość planszy, min: 1");
+            throw new InvalidBoardSizeException(bundle.getString("outOfBoundsWidth"));
         }
 
         if (simulationType == null) {
-            throw new NullPointerException("Podaj poprawny rodzaj symulacji! Nie Null");
+            throw new NullException(bundle.getString("nullPointer"));
         }
 
         int howManyCells;
@@ -65,10 +73,10 @@ public class GameOfLifeBoard implements Cloneable {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 if (k <= howManyCells) {
-                    board[i][j] = new GameOfLifeCell(true);
+                    board[i][j] = new GameOfLifeCell(true, locale);
                     k++;
                 } else {
-                    board[i][j] = new GameOfLifeCell(false);
+                    board[i][j] = new GameOfLifeCell(false, locale);
                 }
             }
         }
@@ -148,15 +156,14 @@ public class GameOfLifeBoard implements Cloneable {
      *
      * @param x index wiersza planszy
      * @param y index kolumny planszy
+     * @throws InvalidBoardSizeException gdy wartość wykracza poza zakres planszy
      */
     private void validateIndex(int x, int y) {
         if (x < 0 || x >= board.length) {
-            throw new ArrayIndexOutOfBoundsException("Nieprawidłowy wiersz, min: 0, "
-                    + "max: " + (getBoard().length - 1));
+            throw new InvalidBoardSizeException(bundle.getString("invalidRow"));
         }
         if (y < 0 || y >= board[0].length) {
-            throw new ArrayIndexOutOfBoundsException("Nieprawidłowa kolumna, min: 0, "
-                    + "max: " + (getBoard()[0].length - 1));
+            throw new InvalidBoardSizeException(bundle.getString("invalidCol"));
         }
     }
 
@@ -179,7 +186,7 @@ public class GameOfLifeBoard implements Cloneable {
      * @param x index wiersza planszy
      * @param y index kolmuny planszy
      * @return wartość boolean komórki planszy
-     * @throws ArrayIndexOutOfBoundsException gdy wartość wykracza poza zakres planszy
+     * @throws InvalidBoardSizeException gdy wartość wykracza poza zakres planszy
      */
     public boolean getCell(int x, int y) {
         validateIndex(x,y);
@@ -194,8 +201,7 @@ public class GameOfLifeBoard implements Cloneable {
      */
     public GameOfLifeRow getRow(int x) {
         if (x < 0 || x >= board.length) {
-            throw new ArrayIndexOutOfBoundsException("Nieprawidłowy wiersz, min: 0, "
-                    + "max: " + (getBoard().length - 1));
+            throw new InvalidBoardSizeException(bundle.getString("invalidRow"));
         }
 
         List<GameOfLifeCell> tempRow = Arrays.asList(new GameOfLifeCell[board[0].length]);
@@ -203,7 +209,7 @@ public class GameOfLifeBoard implements Cloneable {
             tempRow.set(i, board[x][i]);
         }
 
-        return new GameOfLifeRow(tempRow);
+        return new GameOfLifeRow(tempRow, locale);
     }
 
     /**
@@ -214,8 +220,7 @@ public class GameOfLifeBoard implements Cloneable {
      */
     public GameOfLifeColumn getColumn(int y) {
         if (y < 0 || y >= board[0].length) {
-            throw new ArrayIndexOutOfBoundsException("Nieprawidłowa kolumna, min: 0, "
-                    + "max: " + (getBoard()[0].length - 1));
+            throw new InvalidBoardSizeException(bundle.getString("invalidCol"));
         }
 
         List<GameOfLifeCell> tempCol = Arrays.asList(new GameOfLifeCell[board.length]);
@@ -223,7 +228,7 @@ public class GameOfLifeBoard implements Cloneable {
             tempCol.set(i, board[i][y]);
         }
 
-        return new GameOfLifeColumn(tempCol);
+        return new GameOfLifeColumn(tempCol, locale);
     }
 
     /**

@@ -3,15 +3,17 @@ package pl.lodz.p;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class FileGameOfLifeDaoFactory implements Dao<GameOfLifeBoard> {
     private final String filename;
+    private ResourceBundle bundle;
+    private Locale locale;
 
-    public FileGameOfLifeDaoFactory(String filename) {
+    public FileGameOfLifeDaoFactory(String filename, Locale locale) {
         this.filename = filename;
+        this.locale = locale;
+        bundle = ResourceBundle.getBundle("excepions", locale);
     }
 
     /**
@@ -37,13 +39,14 @@ public class FileGameOfLifeDaoFactory implements Dao<GameOfLifeBoard> {
 
 
         GameOfLifeBoard board = new GameOfLifeBoard(lines.getFirst().length(),
-                lines.size(), DensityLevel.LOW, new PlainGameOfLifeSimulator());
+                lines.size(), DensityLevel.LOW, new PlainGameOfLifeSimulator(),
+                new Locale("pl"));
 
         GameOfLifeCell[][] tab = new GameOfLifeCell[lines.size()][lines.getFirst().length()];
         for (int i = 0; i < lines.size(); i++) {
             for (int j = 0; j < lines.getFirst().length(); j++) {
                 boolean value = lines.get(i).charAt(j) == '1';
-                tab[i][j] = new GameOfLifeCell(value);
+                tab[i][j] = new GameOfLifeCell(value, locale);
             }
         }
 

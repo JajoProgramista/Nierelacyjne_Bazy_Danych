@@ -7,13 +7,14 @@
 package pl.lodz.p;
 
 import java.util.List;
+import java.util.Locale;
 
 public class GameOfLifeRow extends GameOfLifeBoardInfo {
     /**
      * Konstruktor inicjalizujący określony wiersz.
      * @param line wiersz planszy, tablica komórek GameOfLifeCell.
      */
-    public GameOfLifeRow(List<GameOfLifeCell> line) {
-        super(line);
+    public GameOfLifeRow(List<GameOfLifeCell> line, Locale locale) {
+        super(line, locale);
     }
 }

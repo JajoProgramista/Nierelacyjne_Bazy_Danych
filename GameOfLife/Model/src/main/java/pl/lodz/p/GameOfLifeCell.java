@@ -8,6 +8,7 @@ package pl.lodz.p;
 
 import exceptions.NoneLineException;
 import exceptions.NoneNeigboursException;
+import exceptions.NullException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -42,7 +43,7 @@ public class GameOfLifeCell implements Cloneable, Comparable<GameOfLifeCell> {
      */
     void setNeighboursList(GameOfLifeCell[] neighbours) {
         if (neighbours == null) {
-            throw new NoneNeigboursException(bundle.getString("noneNeighbours"));
+            throw new NoneNeigboursException(bundle.getString("noneNeigbours"));
         }
 
         neighbourCells = neighbours;
@@ -229,7 +230,7 @@ public class GameOfLifeCell implements Cloneable, Comparable<GameOfLifeCell> {
     @Override
     public int compareTo(GameOfLifeCell cell) {
         if (cell == null) {
-            throw new NullPointerException();
+            throw new NullException(bundle.getString("nullPointer"));
         }
         return Boolean.compare(this.value, cell.value);
     }
