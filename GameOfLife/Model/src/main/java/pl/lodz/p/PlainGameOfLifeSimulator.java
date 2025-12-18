@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class PlainGameOfLifeSimulator implements GameOfLifeSimulator {
 
+
     /**
      * Funkcja ustalająca wartość poszczególnych komórek planszy w następnym kroku gry
      * na podstawie wartości danej komórki oraz wartości komórek sąsiadów.

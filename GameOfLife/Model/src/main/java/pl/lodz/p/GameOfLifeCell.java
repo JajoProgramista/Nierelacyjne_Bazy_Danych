@@ -6,6 +6,8 @@
 
 package pl.lodz.p;
 
+import exceptions.NoneLineException;
+import exceptions.NoneNeigboursException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -14,17 +16,21 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class GameOfLifeCell implements Cloneable, Comparable<GameOfLifeCell> {
     private boolean value;
     private GameOfLifeCell[] neighbourCells;
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
+    private ResourceBundle bundle;
 
     /**
      * Konstruktor GameOfLifeCell tworzący komórkę planszy.
      * @param value wartość komórki true / false
      */
-    public GameOfLifeCell(boolean value) {
+    public GameOfLifeCell(boolean value, Locale locale) {
+        bundle = ResourceBundle.getBundle("exceptions", locale);
         this.value = value;
         neighbourCells = new GameOfLifeCell[8];
     }
@@ -32,10 +38,11 @@ public class GameOfLifeCell implements Cloneable, Comparable<GameOfLifeCell> {
     /**
      * Ustawia liste sąsiadów komórki na podaną w argumencie funkcji.
      * @param neighbours lista sąsiadów typu GameOfLifeCell
+     * @throws NoneNeigboursException jeżeli sąsiedzi nie istnieją.
      */
     void setNeighboursList(GameOfLifeCell[] neighbours) {
         if (neighbours == null) {
-            throw new NullPointerException("Komórki sąsiadujące nie mogą być nullem!");
+            throw new NoneNeigboursException(bundle.getString("noneNeighbours"));
         }
 
         neighbourCells = neighbours;

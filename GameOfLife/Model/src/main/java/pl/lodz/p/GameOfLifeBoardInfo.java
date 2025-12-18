@@ -6,6 +6,7 @@
 
 package pl.lodz.p;
 
+import exceptions.NoneLineException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -14,20 +15,24 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public abstract class GameOfLifeBoardInfo implements PropertyChangeListener, Cloneable {
     private final List<GameOfLifeCell> line;
     private int aliveCells;
     private int deadCells;
+    private ResourceBundle bundle;
 
     /**
      * Konstruktor inicjalizujący określoną linie.
      * @param line wiersz lub kolumna planszy, tablica komórek GameOfLifeCell.
-     * @throws NullPointerException kiedy podana linia jest nullem.
+     * @throws NoneLineException kiedy podana linia jest nullem.
      */
-    public GameOfLifeBoardInfo(List<GameOfLifeCell> line) {
+    public GameOfLifeBoardInfo(List<GameOfLifeCell> line, Locale locale) {
+        bundle = ResourceBundle.getBundle("exceptions", locale);
         if (line == null) {
-            throw new NullPointerException("Podana tablica nie może być nullem");
+            throw new NoneLineException(bundle.getString("noneLine"));
         }
 
         this.line = line;
