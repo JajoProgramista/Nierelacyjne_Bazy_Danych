@@ -1,14 +1,18 @@
 package pl.lodz.p;
 
+import GameOfLifeExceptions.FileException;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class FileGameOfLifeDaoFactory implements Dao<GameOfLifeBoard> {
     private final String filename;
     private ResourceBundle bundle;
     private Locale locale;
+    private static final Logger logger = Logger.getLogger(GameOfLifeCell.class.getName());
 
     public FileGameOfLifeDaoFactory(String filename, Locale locale) {
         this.filename = filename;
@@ -27,7 +31,8 @@ public class FileGameOfLifeDaoFactory implements Dao<GameOfLifeBoard> {
         File file = new File(filename);
 
         if (!new File(filename).exists()) {
-            throw new FileNotFoundException("Plik nie istnieje!");
+            logger.severe(bundle.getString("fileNotFound"));
+            throw new FileException(bundle.getString("fileNotFound"));
         }
 
         try (Scanner inputFile = new Scanner(file)) {
@@ -71,7 +76,8 @@ public class FileGameOfLifeDaoFactory implements Dao<GameOfLifeBoard> {
         try (PrintWriter outputFile = new PrintWriter(filename)) {
             outputFile.println(sb);
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException();
+            logger.severe(bundle.getString("fileNotFound"));
+            throw new FileException(bundle.getString("fileNotFound"));
         }
     }
 }

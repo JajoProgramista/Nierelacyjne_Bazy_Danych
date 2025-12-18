@@ -18,12 +18,14 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 public class GameOfLifeCell implements Cloneable, Comparable<GameOfLifeCell> {
     private boolean value;
     private GameOfLifeCell[] neighbourCells;
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
     private ResourceBundle bundle;
+    private static final Logger logger = Logger.getLogger(GameOfLifeCell.class.getName());
 
     /**
      * Konstruktor GameOfLifeCell tworzący komórkę planszy.
@@ -42,6 +44,7 @@ public class GameOfLifeCell implements Cloneable, Comparable<GameOfLifeCell> {
      */
     void setNeighboursList(GameOfLifeCell[] neighbours) {
         if (neighbours == null) {
+            logger.severe(bundle.getString("noneNeigbours"));
             throw new NoneNeigboursException(bundle.getString("noneNeigbours"));
         }
 
@@ -229,6 +232,7 @@ public class GameOfLifeCell implements Cloneable, Comparable<GameOfLifeCell> {
     @Override
     public int compareTo(GameOfLifeCell cell) {
         if (cell == null) {
+            logger.severe(bundle.getString("nullPointer"));
             throw new NullException(bundle.getString("nullPointer"));
         }
         return Boolean.compare(this.value, cell.value);

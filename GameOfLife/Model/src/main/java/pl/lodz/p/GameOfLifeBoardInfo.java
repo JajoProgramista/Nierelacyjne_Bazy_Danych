@@ -17,12 +17,14 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 public abstract class GameOfLifeBoardInfo implements PropertyChangeListener, Cloneable {
     private final List<GameOfLifeCell> line;
     private int aliveCells;
     private int deadCells;
     private ResourceBundle bundle;
+    private static final Logger logger = Logger.getLogger(GameOfLifeCell.class.getName());
 
     /**
      * Konstruktor inicjalizujący określoną linie.
@@ -32,6 +34,7 @@ public abstract class GameOfLifeBoardInfo implements PropertyChangeListener, Clo
     public GameOfLifeBoardInfo(List<GameOfLifeCell> line, Locale locale) {
         bundle = ResourceBundle.getBundle("exceptions", locale);
         if (line == null) {
+            logger.severe(bundle.getString("noneLine"));
             throw new NoneLineException(bundle.getString("noneLine"));
         }
 
