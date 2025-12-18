@@ -6,6 +6,8 @@
 
 package pl.lodz.p;
 
+import GameOfLifeExceptions.InvalidBoardSizeException;
+import GameOfLifeExceptions.NoneLineException;
 import org.junit.jupiter.api.Test;
 
 import java.beans.PropertyChangeEvent;
@@ -29,10 +31,10 @@ class GameOfLifeBoardInfoTest {
         // 1 0 1
         // 0 0 1
         // 0 0 0
-        GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
-                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                new GameOfLifeCell(false)}};
+        GameOfLifeCell[][] board = {{new GameOfLifeCell(true, new Locale("pl")),new GameOfLifeCell(false, new Locale("pl")),
+                new GameOfLifeCell(true, new Locale("pl"))}, {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),
+                new GameOfLifeCell(true, new Locale("pl"))}, {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),
+                new GameOfLifeCell(false, new Locale("pl"))}};
 
         game.setBoard(board);
 
@@ -52,11 +54,11 @@ class GameOfLifeBoardInfoTest {
         // 0 0 0
         // 1 1 1
 
-        GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
-                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                new GameOfLifeCell(false)}, {new GameOfLifeCell(true), new GameOfLifeCell(true),
-                new GameOfLifeCell(true)}};
+        GameOfLifeCell[][] board = {{new GameOfLifeCell(true, new Locale("pl")),new GameOfLifeCell(false, new Locale("pl")),
+                new GameOfLifeCell(true, new Locale("pl"))}, {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),
+                new GameOfLifeCell(true, new Locale("pl"))}, {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),
+                new GameOfLifeCell(false, new Locale("pl"))}, {new GameOfLifeCell(true, new Locale("pl")), new GameOfLifeCell(true, new Locale("pl")),
+                new GameOfLifeCell(true, new Locale("pl"))}};
 
         game.setBoard(board);
 
@@ -69,14 +71,14 @@ class GameOfLifeBoardInfoTest {
     @Test
     void nullRowGivenShouldThrowException() {
         assertThrows(NullPointerException.class, () -> {
-           GameOfLifeRow row = new GameOfLifeRow(null);
+           GameOfLifeRow row = new GameOfLifeRow(null, new Locale("pl"));
         });
     }
 
     @Test
     void nullColumnGivenShouldThrowException() {
-        assertThrows(NullPointerException.class, () -> {
-            GameOfLifeColumn col = new GameOfLifeColumn(null);
+        assertThrows(NoneLineException.class, () -> {
+            GameOfLifeColumn col = new GameOfLifeColumn(null, new Locale("pl"));
         });
     }
 
@@ -85,11 +87,11 @@ class GameOfLifeBoardInfoTest {
     void rowIndexOutOfBoundTest() {
         GameOfLifeBoard game = new GameOfLifeBoard(3, 3,DensityLevel.LOW, new PlainGameOfLifeSimulator(),
                 new Locale("pl"));
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+        assertThrows(InvalidBoardSizeException.class, () -> {
             game.getRow(3);
         });
 
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+        assertThrows(InvalidBoardSizeException.class, () -> {
             game.getRow(-1);
         });
     }
@@ -98,11 +100,11 @@ class GameOfLifeBoardInfoTest {
     void columnIndexOutOfBoundTest() {
         GameOfLifeBoard game = new GameOfLifeBoard(3, 3, DensityLevel.LOW, new PlainGameOfLifeSimulator(),
                 new Locale("pl"));
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+        assertThrows(InvalidBoardSizeException.class, () -> {
             game.getColumn(3);
         });
 
-        assertThrows(ArrayIndexOutOfBoundsException.class, () -> {
+        assertThrows(InvalidBoardSizeException.class, () -> {
             game.getColumn(-1);
         });
     }
@@ -115,11 +117,11 @@ class GameOfLifeBoardInfoTest {
         // 0 0 1
         // 0 0 0
         // 1 1 1
-        GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
-                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                new GameOfLifeCell(false)}, {new GameOfLifeCell(true), new GameOfLifeCell(true),
-                new GameOfLifeCell(true)}};
+        GameOfLifeCell[][] board = {{new GameOfLifeCell(true, new Locale("pl")),new GameOfLifeCell(false, new Locale("pl")),
+                new GameOfLifeCell(true, new Locale("pl"))}, {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),
+                new GameOfLifeCell(true, new Locale("pl"))}, {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),
+                new GameOfLifeCell(false, new Locale("pl"))}, {new GameOfLifeCell(true, new Locale("pl")), new GameOfLifeCell(true, new Locale("pl")),
+                new GameOfLifeCell(true, new Locale("pl"))}};
 
         game.setBoard(board);
         var row = game.getRow(3);
@@ -135,10 +137,10 @@ class GameOfLifeBoardInfoTest {
     @Test
     void propertyChangeTest() {
         List<GameOfLifeCell> cellsArray = Arrays.asList(new GameOfLifeCell[2]);
-        GameOfLifeCell cell1 = new GameOfLifeCell(false);
+        GameOfLifeCell cell1 = new GameOfLifeCell(false, new Locale("pl"));
         cellsArray.set(0, cell1);
 
-        GameOfLifeRow row = new GameOfLifeRow(cellsArray);
+        GameOfLifeRow row = new GameOfLifeRow(cellsArray, new Locale("pl"));
 
         assertEquals(1, row.countDeadCells());
         PropertyChangeEvent evt = new PropertyChangeEvent(cell1, "cellValue", false, true);
@@ -149,9 +151,9 @@ class GameOfLifeBoardInfoTest {
 
     @Test
     void propertyChangeSameValueTest() {
-        GameOfLifeCell cell = new GameOfLifeCell(true);
+        GameOfLifeCell cell = new GameOfLifeCell(true, new Locale("pl"));
         List<GameOfLifeCell> cells = Arrays.asList(cell);
-        GameOfLifeRow row = new GameOfLifeRow(cells);
+        GameOfLifeRow row = new GameOfLifeRow(cells, new Locale("pl"));
 
         PropertyChangeEvent evt = new PropertyChangeEvent(cell, "cellValue", true, true);
         row.propertyChange(evt);
@@ -166,11 +168,11 @@ class GameOfLifeBoardInfoTest {
 
     @Test
     void removeListenerTest() {
-        GameOfLifeCell cell1 = new GameOfLifeCell(false);
-        GameOfLifeCell cell2 = new GameOfLifeCell(true);
+        GameOfLifeCell cell1 = new GameOfLifeCell(false, new Locale("pl"));
+        GameOfLifeCell cell2 = new GameOfLifeCell(true, new Locale("pl"));
         List<GameOfLifeCell> cellsArray = Arrays.asList(cell1, cell2);
 
-        GameOfLifeRow row = new GameOfLifeRow(cellsArray);
+        GameOfLifeRow row = new GameOfLifeRow(cellsArray, new Locale("pl"));
 
         assertEquals(1, row.countDeadCells());
         cell1.updateState(true);
@@ -186,12 +188,12 @@ class GameOfLifeBoardInfoTest {
 
     @Test
     public void propertyChangeListenerOtherMessageTest() {
-        GameOfLifeCell cell1 = new GameOfLifeCell(false);
+        GameOfLifeCell cell1 = new GameOfLifeCell(false, new Locale("pl"));
         List<GameOfLifeCell> cellsArray = Arrays.asList(new GameOfLifeCell[2]);
 
         cellsArray.set(0, cell1);
 
-        GameOfLifeRow row = new GameOfLifeRow(cellsArray);
+        GameOfLifeRow row = new GameOfLifeRow(cellsArray, new Locale("pl"));
         assertEquals(1, row.countDeadCells());
 
         PropertyChangeEvent evt = new PropertyChangeEvent(cell1, "otherMessage", false,
@@ -204,11 +206,11 @@ class GameOfLifeBoardInfoTest {
     @Test
     void toStringMethodTest() {
         GameOfLifeCell[] cells = new GameOfLifeCell[3];
-        cells[0] = new GameOfLifeCell(true);
-        cells[1] = new GameOfLifeCell(false);
-        cells[2] = new GameOfLifeCell(false);
+        cells[0] = new GameOfLifeCell(true, new Locale("pl"));
+        cells[1] = new GameOfLifeCell(false, new Locale("pl"));
+        cells[2] = new GameOfLifeCell(false, new Locale("pl"));
 
-        GameOfLifeBoardInfo row = new GameOfLifeRow(List.of(cells));
+        GameOfLifeBoardInfo row = new GameOfLifeRow(List.of(cells), new Locale("pl"));
         /*IO.println(row.toString());*/
         String result = "GameOfLifeRow[Komórki: =true false false ,Ilość żywych: =1,Ilość martwych: =2]";
         assertEquals(result, row.toString());
@@ -217,17 +219,17 @@ class GameOfLifeBoardInfoTest {
     @Test
     void validEqualsTest() {
         GameOfLifeCell[] cells1 = new GameOfLifeCell[3];
-        cells1[0] = new GameOfLifeCell(true);
-        cells1[1] = new GameOfLifeCell(false);
-        cells1[2] = new GameOfLifeCell(false);
+        cells1[0] = new GameOfLifeCell(true, new Locale("pl"));
+        cells1[1] = new GameOfLifeCell(false, new Locale("pl"));
+        cells1[2] = new GameOfLifeCell(false, new Locale("pl"));
 
         GameOfLifeCell[] cells2 = new GameOfLifeCell[3];
-        cells2[0] = new GameOfLifeCell(true);
-        cells2[1] = new GameOfLifeCell(false);
-        cells2[2] = new GameOfLifeCell(false);
+        cells2[0] = new GameOfLifeCell(true, new Locale("pl"));
+        cells2[1] = new GameOfLifeCell(false, new Locale("pl"));
+        cells2[2] = new GameOfLifeCell(false, new Locale("pl"));
 
-        GameOfLifeBoardInfo row1 = new GameOfLifeRow(List.of(cells1));
-        GameOfLifeBoardInfo row2 = new GameOfLifeRow(List.of(cells2));
+        GameOfLifeBoardInfo row1 = new GameOfLifeRow(List.of(cells1), new Locale("pl"));
+        GameOfLifeBoardInfo row2 = new GameOfLifeRow(List.of(cells2), new Locale("pl"));
         GameOfLifeBoardInfo row3 = row1;
         assertTrue(row1.equals(row2));
         assertTrue(row3.equals(row1));
@@ -236,38 +238,38 @@ class GameOfLifeBoardInfoTest {
     @Test
     void invalidEqualsTest() {
         GameOfLifeCell[] cells1 = new GameOfLifeCell[4];
-        cells1[0] = new GameOfLifeCell(false);
-        cells1[1] = new GameOfLifeCell(false);
-        cells1[2] = new GameOfLifeCell(false);
-        cells1[3] = new GameOfLifeCell(false);
+        cells1[0] = new GameOfLifeCell(false, new Locale("pl"));
+        cells1[1] = new GameOfLifeCell(false, new Locale("pl"));
+        cells1[2] = new GameOfLifeCell(false, new Locale("pl"));
+        cells1[3] = new GameOfLifeCell(false, new Locale("pl"));
 
         GameOfLifeCell[] cells2 = new GameOfLifeCell[3];
-        cells2[0] = new GameOfLifeCell(true);
-        cells2[1] = new GameOfLifeCell(false);
-        cells2[2] = new GameOfLifeCell(false);
+        cells2[0] = new GameOfLifeCell(true, new Locale("pl"));
+        cells2[1] = new GameOfLifeCell(false, new Locale("pl"));
+        cells2[2] = new GameOfLifeCell(false, new Locale("pl"));
 
-        GameOfLifeBoardInfo row1 = new GameOfLifeRow(List.of(cells1));
-        GameOfLifeBoardInfo row2 = new GameOfLifeRow(List.of(cells2));
+        GameOfLifeBoardInfo row1 = new GameOfLifeRow(List.of(cells1), new Locale("pl"));
+        GameOfLifeBoardInfo row2 = new GameOfLifeRow(List.of(cells2), new Locale("pl"));
 
         assertFalse(row1.equals(row2));
         assertFalse(row1.equals(null));
-        assertFalse(row1.equals(new GameOfLifeCell(true)));
+        assertFalse(row1.equals(new GameOfLifeCell(true, new Locale("pl"))));
     }
 
     @Test
     void hashCodeMethodTest() {
         GameOfLifeCell[] cells1 = new GameOfLifeCell[3];
-        cells1[0] = new GameOfLifeCell(true);
-        cells1[1] = new GameOfLifeCell(false);
-        cells1[2] = new GameOfLifeCell(false);
+        cells1[0] = new GameOfLifeCell(true, new Locale("pl"));
+        cells1[1] = new GameOfLifeCell(false, new Locale("pl"));
+        cells1[2] = new GameOfLifeCell(false, new Locale("pl"));
 
         GameOfLifeCell[] cells2 = new GameOfLifeCell[3];
-        cells2[0] = new GameOfLifeCell(true);
-        cells2[1] = new GameOfLifeCell(false);
-        cells2[2] = new GameOfLifeCell(false);
+        cells2[0] = new GameOfLifeCell(true, new Locale("pl"));
+        cells2[1] = new GameOfLifeCell(false, new Locale("pl"));
+        cells2[2] = new GameOfLifeCell(false, new Locale("pl"));
 
-        GameOfLifeBoardInfo row1 = new GameOfLifeRow(List.of(cells1));
-        GameOfLifeBoardInfo row2 = new GameOfLifeRow(List.of(cells2));
+        GameOfLifeBoardInfo row1 = new GameOfLifeRow(List.of(cells1), new Locale("pl"));
+        GameOfLifeBoardInfo row2 = new GameOfLifeRow(List.of(cells2), new Locale("pl"));
 
         assertEquals(row1.hashCode(), row2.hashCode());
         assertTrue(row1.equals(row2));

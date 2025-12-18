@@ -13,7 +13,7 @@ public class FileGameOfLifeDaoFactory implements Dao<GameOfLifeBoard> {
     public FileGameOfLifeDaoFactory(String filename, Locale locale) {
         this.filename = filename;
         this.locale = locale;
-        bundle = ResourceBundle.getBundle("excepions", locale);
+        bundle = ResourceBundle.getBundle("exceptions", locale);
     }
 
     /**
@@ -36,7 +36,6 @@ public class FileGameOfLifeDaoFactory implements Dao<GameOfLifeBoard> {
                 lines.add(in);
             }
         }
-
 
         GameOfLifeBoard board = new GameOfLifeBoard(lines.getFirst().length(),
                 lines.size(), DensityLevel.LOW, new PlainGameOfLifeSimulator(),

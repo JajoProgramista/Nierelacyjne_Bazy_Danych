@@ -8,6 +8,8 @@ package pl.lodz.p;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Locale;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -20,12 +22,12 @@ public class PlainGameOfLifeSimulatorTest {
         // 0 0 1    [martwa komórka (1,1) ma dokładnie 3 żywych sąsiadów]
         // 0 0 0
 
-        GameOfLifeCell[][] board = {{new GameOfLifeCell(true),new GameOfLifeCell(false),
-                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                new GameOfLifeCell(true)}, {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                new GameOfLifeCell(false)}};
+        GameOfLifeCell[][] board = {{new GameOfLifeCell(true, new Locale("pl")),new GameOfLifeCell(false, new Locale("pl")),
+                new GameOfLifeCell(true, new Locale("pl"))}, {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),
+                new GameOfLifeCell(true, new Locale("pl"))}, {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),
+                new GameOfLifeCell(false, new Locale("pl"))}};
 
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator(), new Locale("pl"));
         game.setBoard(board);
 
 
@@ -41,11 +43,11 @@ public class PlainGameOfLifeSimulatorTest {
         //  1 0 1
 
         GameOfLifeCell[][] board =
-                {{new GameOfLifeCell(false),new GameOfLifeCell(false), new GameOfLifeCell(true)},
-                        {new GameOfLifeCell(false), new GameOfLifeCell(false), new GameOfLifeCell(false)},
-                        {new GameOfLifeCell(true), new GameOfLifeCell(false),
-                                new GameOfLifeCell(true)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
+                {{new GameOfLifeCell(false, new Locale("pl")),new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(true, new Locale("pl"))},
+                        {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl"))},
+                        {new GameOfLifeCell(true, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),
+                                new GameOfLifeCell(true, new Locale("pl"))}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator(), new Locale("pl"));
         game.setBoard(board);
 
         assertFalse(game.getBoard()[0][0].getCellValue());
@@ -61,12 +63,12 @@ public class PlainGameOfLifeSimulatorTest {
         // 0 0 0
 
         GameOfLifeCell[][] board =
-                {{new GameOfLifeCell(true),new GameOfLifeCell(false), new GameOfLifeCell(true)},
-                        {new GameOfLifeCell(true), new GameOfLifeCell(false), new GameOfLifeCell(true)},
-                        {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                                new GameOfLifeCell(false)}};
+                {{new GameOfLifeCell(true, new Locale("pl")),new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(true, new Locale("pl"))},
+                        {new GameOfLifeCell(true, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(true, new Locale("pl"))},
+                        {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),
+                                new GameOfLifeCell(false, new Locale("pl"))}};
 
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator(), new Locale("pl"));
         game.setBoard(board);
 
         assertFalse(game.getBoard()[1][1].getCellValue());
@@ -81,11 +83,11 @@ public class PlainGameOfLifeSimulatorTest {
         // 0 0 0
 
         GameOfLifeCell[][] board =
-                {{new GameOfLifeCell(true),new GameOfLifeCell(false), new GameOfLifeCell(true)},
-                        {new GameOfLifeCell(false), new GameOfLifeCell(false), new GameOfLifeCell(false)},
-                        {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                                new GameOfLifeCell(false)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
+                {{new GameOfLifeCell(true, new Locale("pl")),new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(true, new Locale("pl"))},
+                        {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl"))},
+                        {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),
+                                new GameOfLifeCell(false, new Locale("pl"))}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator(), new Locale("pl"));
         game.setBoard(board);
 
         assertFalse(game.getBoard()[1][1].getCellValue());
@@ -100,11 +102,11 @@ public class PlainGameOfLifeSimulatorTest {
         // 0 0 0
 
         GameOfLifeCell[][] board =
-                {{new GameOfLifeCell(false),new GameOfLifeCell(false), new GameOfLifeCell(true)},
-                        {new GameOfLifeCell(false), new GameOfLifeCell(false), new GameOfLifeCell(false)},
-                        {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                                new GameOfLifeCell(false)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
+                {{new GameOfLifeCell(false, new Locale("pl")),new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(true, new Locale("pl"))},
+                        {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl"))},
+                        {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),
+                                new GameOfLifeCell(false, new Locale("pl"))}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator(), new Locale("pl"));
         game.setBoard(board);
 
         assertFalse(game.getBoard()[0][0].getCellValue());
@@ -119,11 +121,11 @@ public class PlainGameOfLifeSimulatorTest {
         // 1 0 0
 
         GameOfLifeCell[][] board =
-                {{new GameOfLifeCell(true),new GameOfLifeCell(false), new GameOfLifeCell(true)},
-                        {new GameOfLifeCell(false), new GameOfLifeCell(false), new GameOfLifeCell(false)},
-                        {new GameOfLifeCell(true), new GameOfLifeCell(false),
-                                new GameOfLifeCell(false)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
+                {{new GameOfLifeCell(true, new Locale("pl")),new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(true, new Locale("pl"))},
+                        {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl"))},
+                        {new GameOfLifeCell(true, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),
+                                new GameOfLifeCell(false, new Locale("pl"))}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator(), new Locale("pl"));
         game.setBoard(board);
 
         assertTrue(game.getBoard()[0][0].getCellValue());
@@ -138,11 +140,11 @@ public class PlainGameOfLifeSimulatorTest {
         // 0 0 0
 
         GameOfLifeCell[][] board =
-                {{new GameOfLifeCell(true),new GameOfLifeCell(true), new GameOfLifeCell(false)},
-                        {new GameOfLifeCell(true), new GameOfLifeCell(true), new GameOfLifeCell(false)},
-                        {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                                new GameOfLifeCell(false)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
+                {{new GameOfLifeCell(true, new Locale("pl")),new GameOfLifeCell(true, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl"))},
+                        {new GameOfLifeCell(true, new Locale("pl")), new GameOfLifeCell(true, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl"))},
+                        {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),
+                                new GameOfLifeCell(false, new Locale("pl"))}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator(), new Locale("pl"));
         game.setBoard(board);
 
         assertTrue(game.getBoard()[0][0].getCellValue());
@@ -157,11 +159,11 @@ public class PlainGameOfLifeSimulatorTest {
         // 1 0 1
 
         GameOfLifeCell[][] board =
-                {{new GameOfLifeCell(true),new GameOfLifeCell(false), new GameOfLifeCell(true)},
-                        {new GameOfLifeCell(false), new GameOfLifeCell(false), new GameOfLifeCell(false)},
-                        {new GameOfLifeCell(true), new GameOfLifeCell(false),
-                                new GameOfLifeCell(true)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
+                {{new GameOfLifeCell(true, new Locale("pl")),new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(true, new Locale("pl"))},
+                        {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl"))},
+                        {new GameOfLifeCell(true, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),
+                                new GameOfLifeCell(true, new Locale("pl"))}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator(), new Locale("pl"));
         game.setBoard(board);
 
         assertTrue(game.getBoard()[0][0].getCellValue());
@@ -176,11 +178,11 @@ public class PlainGameOfLifeSimulatorTest {
         // 0 0 0
 
         GameOfLifeCell[][] board =
-                {{new GameOfLifeCell(true),new GameOfLifeCell(true), new GameOfLifeCell(false)},
-                        {new GameOfLifeCell(false), new GameOfLifeCell(false), new GameOfLifeCell(false)},
-                        {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                                new GameOfLifeCell(false)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
+                {{new GameOfLifeCell(true, new Locale("pl")),new GameOfLifeCell(true, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl"))},
+                        {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl"))},
+                        {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),
+                                new GameOfLifeCell(false, new Locale("pl"))}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator(), new Locale("pl"));
         game.setBoard(board);
 
         assertTrue(game.getBoard()[0][0].getCellValue());
@@ -195,11 +197,11 @@ public class PlainGameOfLifeSimulatorTest {
         // 0 0 1
 
         GameOfLifeCell[][] board =
-                {{new GameOfLifeCell(true),new GameOfLifeCell(false), new GameOfLifeCell(false)},
-                        {new GameOfLifeCell(false), new GameOfLifeCell(false), new GameOfLifeCell(false)},
-                        {new GameOfLifeCell(false), new GameOfLifeCell(false),
-                                new GameOfLifeCell(true)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
+                {{new GameOfLifeCell(true, new Locale("pl")),new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl"))},
+                        {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl"))},
+                        {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl")),
+                                new GameOfLifeCell(true, new Locale("pl"))}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator(), new Locale("pl"));
         game.setBoard(board);
 
         assertTrue(game.getBoard()[0][0].getCellValue());
@@ -214,11 +216,11 @@ public class PlainGameOfLifeSimulatorTest {
         // 0 1 0
 
         GameOfLifeCell[][] board =
-                {{new GameOfLifeCell(false),new GameOfLifeCell(true), new GameOfLifeCell(false)},
-                        {new GameOfLifeCell(true), new GameOfLifeCell(true), new GameOfLifeCell(true)},
-                        {new GameOfLifeCell(false), new GameOfLifeCell(true),
-                                new GameOfLifeCell(false)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
+                {{new GameOfLifeCell(false, new Locale("pl")),new GameOfLifeCell(true, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl"))},
+                        {new GameOfLifeCell(true, new Locale("pl")), new GameOfLifeCell(true, new Locale("pl")), new GameOfLifeCell(true, new Locale("pl"))},
+                        {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(true, new Locale("pl")),
+                                new GameOfLifeCell(false, new Locale("pl"))}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator(), new Locale("pl"));
         game.setBoard(board);
 
         assertTrue(game.getBoard()[1][1].getCellValue());
@@ -233,11 +235,11 @@ public class PlainGameOfLifeSimulatorTest {
         // 0 1 1
 
         GameOfLifeCell[][] board =
-                {{new GameOfLifeCell(true),new GameOfLifeCell(false), new GameOfLifeCell(false)},
-                        {new GameOfLifeCell(false), new GameOfLifeCell(true), new GameOfLifeCell(true)},
-                        {new GameOfLifeCell(false), new GameOfLifeCell(true),
-                                new GameOfLifeCell(true)}};
-        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator());
+                {{new GameOfLifeCell(true, new Locale("pl")),new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(false, new Locale("pl"))},
+                        {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(true, new Locale("pl")), new GameOfLifeCell(true, new Locale("pl"))},
+                        {new GameOfLifeCell(false, new Locale("pl")), new GameOfLifeCell(true, new Locale("pl")),
+                                new GameOfLifeCell(true, new Locale("pl"))}};
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator(), new Locale("pl"));
         game.setBoard(board);
 
         assertTrue(game.getBoard()[0][0].getCellValue());

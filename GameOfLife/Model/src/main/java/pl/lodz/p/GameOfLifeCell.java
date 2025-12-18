@@ -6,9 +6,8 @@
 
 package pl.lodz.p;
 
-import exceptions.NoneLineException;
-import exceptions.NoneNeigboursException;
-import exceptions.NullException;
+import GameOfLifeExceptions.NoneNeigboursException;
+import GameOfLifeExceptions.NullException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
