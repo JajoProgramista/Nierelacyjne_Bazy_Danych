@@ -48,7 +48,7 @@ public class GameOfLifeScene {
         nextStepButton.setFont(new Font(20));
         nextStepButton.setPrefWidth(200);
         nextStepButton.setPrefHeight(50);
-        nextStepButton.setStyle("-fx-background-color: red; " +
+        nextStepButton.setStyle("-fx-background-color: #BF913B; " +
                 "-fx-background-radius: 15; " +
                 "-fx-border-radius: 15; " +
                 "-fx-border-color: black; " +
@@ -62,7 +62,7 @@ public class GameOfLifeScene {
         saveButton.setFont(new Font(20));
         saveButton.setPrefWidth(200);
         saveButton.setPrefHeight(50);
-        saveButton.setStyle("-fx-background-color: red; " +
+        saveButton.setStyle("-fx-background-color: #BF913B; " +
                 "-fx-background-radius: 15; " +
                 "-fx-border-radius: 15; " +
                 "-fx-border-color: black; " +
@@ -91,7 +91,7 @@ public class GameOfLifeScene {
         loadButton.setFont(new Font(20));
         loadButton.setPrefWidth(200);
         loadButton.setPrefHeight(50);
-        loadButton.setStyle("-fx-background-color: red; " +
+        loadButton.setStyle("-fx-background-color: #BF913B; " +
                 "-fx-background-radius: 15; " +
                 "-fx-border-radius: 15; " +
                 "-fx-border-color: black; " +
@@ -123,7 +123,7 @@ public class GameOfLifeScene {
 
         VBox root = new VBox(20);
         root.setAlignment(Pos.CENTER);
-        root.setStyle("-fx-background-color: yellow;");
+        root.setStyle("-fx-background-color: #DCDDC6;");
         root.getChildren().addAll(title, gridPane, buttonBox);
 
 
@@ -171,7 +171,7 @@ public class GameOfLifeScene {
 
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                cells[i][j].setFill(board[i][j].getCellValue() ? Color.RED : Color.WHITE);
+                cells[i][j].setFill(board[i][j].getCellValue() ? Color.BLACK : Color.WHITE);
             }
         }
     }

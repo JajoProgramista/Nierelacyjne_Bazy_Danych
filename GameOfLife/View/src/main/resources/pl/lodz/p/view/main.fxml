@@ -5,17 +5,17 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: yellow;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.lodz.p.view.InitialScene">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #DCDDC6;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.lodz.p.view.InitialScene">
     <children>
         <Label layoutX="290.0" layoutY="26.0" prefHeight="38.0" prefWidth="353.0" text="GameOfLifeBoard" textFill="#e85319">
             <font>
                 <Font name="Times New Roman" size="41.0" />
             </font>
         </Label>
-        <Pane layoutX="219.0" layoutY="96.0" prefHeight="165.0" prefWidth="463.0" style="-fx-background-color: red; -fx-border-radius: 15; -fx-background-radius: 15; -fx-border-color: black; -fx-border-width: 2;">
+        <Pane layoutX="219.0" layoutY="96.0" prefHeight="165.0" prefWidth="463.0" style="-fx-background-color: #BF913B; -fx-border-radius: 15; -fx-background-radius: 15; -fx-border-color: black; -fx-border-width: 2;">
             <children>
-                <TextField fx:id="heightField" alignment="CENTER" layoutX="129.0" layoutY="48.0" prefHeight="41.0" prefWidth="179.0" promptText="%heightField" />
-                <TextField fx:id="widthField" alignment="CENTER" layoutX="129.0" layoutY="102.0" prefHeight="41.0" prefWidth="179.0" promptText="%widthField" />
+                <TextField fx:id="heightField" alignment="CENTER" layoutX="129.0" layoutY="50.0" prefHeight="41.0" prefWidth="179.0" promptText="%heightField" style="-fx-background-color: #E6DAA1;" />
+                <TextField fx:id="widthField" alignment="CENTER" layoutX="129.0" layoutY="102.0" prefHeight="41.0" prefWidth="179.0" promptText="%widthField" style="-fx-background-color: E6DAA1;" />
                 <Text fx:id="firstPaneLabel" layoutX="62.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%firstPaneTitle" textAlignment="CENTER" wrappingWidth="339.13671875">
                     <font>
                         <Font size="19.0" />
@@ -23,44 +23,44 @@
                 </Text>
             </children>
         </Pane>
-        <Pane layoutX="219.0" layoutY="284.0" prefHeight="205.0" prefWidth="463.0" style="-fx-background-color: red; -fx-border-radius: 15; -fx-background-radius: 15; -fx-border-color: black; -fx-border-width: 2;">
+        <Pane layoutX="219.0" layoutY="284.0" prefHeight="205.0" prefWidth="463.0" style="-fx-background-color: #BF913B; -fx-border-radius: 15; -fx-background-radius: 15; -fx-border-color: black; -fx-border-width: 2;">
             <children>
                 <Text fx:id="secondPaneLabel" layoutX="70.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="%secondPaneTitle" textAlignment="CENTER" wrappingWidth="323.13671875">
                     <font>
                         <Font size="19.0" />
                     </font>
                 </Text>
-                <RadioButton fx:id="lowButton" contentDisplay="CENTER" layoutX="70.0" layoutY="63.0" mnemonicParsing="false" text="%lowRadioButton">
+                <RadioButton fx:id="lowButton" contentDisplay="CENTER" layoutX="70.0" layoutY="63.0" mnemonicParsing="false" text="%lowRadioButton" textFill="#12f230">
                     <font>
                         <Font size="16.0" />
                     </font>
                 </RadioButton>
-                <RadioButton fx:id="mediumButton" contentDisplay="CENTER" layoutX="70.0" layoutY="103.0" mnemonicParsing="false" text="%mediumRadioButton">
+                <RadioButton fx:id="mediumButton" contentDisplay="CENTER" layoutX="70.0" layoutY="103.0" mnemonicParsing="false" text="%mediumRadioButton" textFill="#eff243">
                     <font>
                         <Font size="16.0" />
                     </font>
                 </RadioButton>
-                <RadioButton fx:id="highButton" contentDisplay="CENTER" layoutX="70.0" layoutY="146.0" mnemonicParsing="false" text="%highRadioButton">
+                <RadioButton fx:id="highButton" contentDisplay="CENTER" layoutX="70.0" layoutY="146.0" mnemonicParsing="false" text="%highRadioButton" textFill="#f41515">
                     <font>
                         <Font size="16.0" />
                     </font>
                 </RadioButton>
             </children>
         </Pane>
-        <Button layoutX="214.0" layoutY="501.0" mnemonicParsing="false" onAction="#handleStart" prefHeight="85.0" prefWidth="463.0" style="-fx-background-color: red; -fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: black; -fx-border-width: 2;" text="Start" textAlignment="CENTER">
+        <Button layoutX="214.0" layoutY="501.0" mnemonicParsing="false" onAction="#handleStart" prefHeight="85.0" prefWidth="463.0" style="-fx-background-color: #BF913B; -fx-background-radius: 15; -fx-border-radius: 15; -fx-border-color: black; -fx-border-width: 2;" text="Start" textAlignment="CENTER">
             <font>
                 <Font size="32.0" />
             </font>
         </Button>
       <Label fx:id="chooseLangLabel" layoutX="33.0" layoutY="14.0" prefHeight="34.0" prefWidth="155.0" text="%chooseLang">
          <font>
-            <Font size="16.0" />
+            <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <ChoiceBox fx:id="languageChoiceBox" layoutX="18.0" layoutY="48.0" prefWidth="150.0" />
-      <Label fx:id="authorsLabel" layoutX="626.0" layoutY="14.0" prefHeight="72.0" prefWidth="266.0" text="cos">
+      <ChoiceBox fx:id="languageChoiceBox" layoutX="18.0" layoutY="48.0" prefWidth="150.0" style="-fx-background-color: #E6DAA1; -fx-border-color: black; -fx-border-radius: 4;" />
+      <Label fx:id="authorsLabel" layoutX="687.0" layoutY="6.0" prefHeight="117.0" prefWidth="208.0" text="cos" textAlignment="CENTER">
          <font>
-            <Font size="16.0" />
+            <Font size="18.0" />
          </font>
       </Label>
     </children>
