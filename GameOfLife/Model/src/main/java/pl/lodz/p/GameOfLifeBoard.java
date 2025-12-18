@@ -6,6 +6,7 @@
 
 package pl.lodz.p;
 
+import exceptions.InvalidBoardSizeException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -35,7 +36,7 @@ public class GameOfLifeBoard implements Cloneable {
      */
     public GameOfLifeBoard(int height, int width, DensityLevel d, GameOfLifeSimulator simulationType) {
         if (height < 1) {
-            throw new IndexOutOfBoundsException("Nieprawidłowa wysokość planszy, min: 1");
+            throw new InvalidBoardSizeException("");
         }
 
         if (width < 1) {
