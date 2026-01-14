@@ -6,8 +6,8 @@
 
 package pl.lodz.p;
 
-import GameOfLifeExceptions.NoneNeigboursException;
-import GameOfLifeExceptions.NullException;
+import exceptions.NoneNeigboursException;
+import exceptions.NullException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -24,12 +24,14 @@ public class GameOfLifeCell implements Cloneable, Comparable<GameOfLifeCell> {
     private boolean value;
     private GameOfLifeCell[] neighbourCells;
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
-    private ResourceBundle bundle;
+    private final ResourceBundle bundle;
     private static final Logger logger = Logger.getLogger(GameOfLifeCell.class.getName());
+    private final ArrayList<Boolean> previousStates = new ArrayList<>();
 
     /**
      * Konstruktor GameOfLifeCell tworzący komórkę planszy.
      * @param value wartość komórki true / false
+     * @param locale lokalizacja (pl / en)
      */
     public GameOfLifeCell(boolean value, Locale locale) {
         bundle = ResourceBundle.getBundle("exceptions", locale);
@@ -105,6 +107,13 @@ public class GameOfLifeCell implements Cloneable, Comparable<GameOfLifeCell> {
         return this.value;
     }
 
+    public void setPreviousState() {
+        if (previousStates.isEmpty()) {
+            return;
+        }
+        value = previousStates.removeLast();
+    }
+
     /**
      * Funkcja aktualizująca stan komórki na podstawie podanego argumentu.
      * @param newState wartość boolean komórki (true / false)
@@ -113,6 +122,7 @@ public class GameOfLifeCell implements Cloneable, Comparable<GameOfLifeCell> {
         boolean previousValue = this.value;
         this.value = newState;
         support.firePropertyChange("cellValue", previousValue, value);
+        previousStates.add(previousValue);
     }
 
     /**

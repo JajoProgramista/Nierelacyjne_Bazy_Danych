@@ -1,6 +1,6 @@
 package pl.lodz.p;
 
-import GameOfLifeExceptions.FileException;
+import exceptions.FileException;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -1,5 +1,6 @@
 package pl.lodz.p.view;
 
+import exceptions.InvalidBoardSizeException;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
@@ -45,6 +46,7 @@ public class InitialScene {
     private ResourceBundle bundle;
 
     private Locale locale;
+
     @FXML
     public void initialize() {
         ToggleGroup group = new ToggleGroup();
@@ -112,9 +114,18 @@ public class InitialScene {
                     locale);
             stage.setScene(gameScene.getScene());
 
-
-        } catch (NumberFormatException e) {
-            System.out.println("Błędne dane wejściowe!");
+        }
+        catch (InvalidBoardSizeException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(bundle.getString("error"));
+            alert.setHeaderText(e.getMessageKey());
+            alert.showAndWait();
+        }
+        catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(bundle.getString("error"));
+            alert.setHeaderText(bundle.getString("gameNotWorking"));
+            alert.showAndWait();
         }
     }
 }

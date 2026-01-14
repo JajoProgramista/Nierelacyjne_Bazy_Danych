@@ -23,7 +23,7 @@ class GameOfLifeCellTest {
     @Test
     void setNullNeigboursListShouldThrowException() {
         GameOfLifeCell cell = new GameOfLifeCell(true, new Locale("pl"));
-        assertThrows(GameOfLifeExceptions.NoneNeigboursException.class, () -> {
+        assertThrows(exceptions.NoneNeigboursException.class, () -> {
           cell.setNeighboursList(null);
         });
     }
@@ -146,12 +146,26 @@ class GameOfLifeCellTest {
         GameOfLifeCell cell2 = new GameOfLifeCell(false, new Locale("pl"));
         GameOfLifeCell cell3 = new GameOfLifeCell(true, new Locale("pl"));
 
-        assertThrows(GameOfLifeExceptions.NullException.class, () -> {
+        assertThrows(exceptions.NullException.class, () -> {
             cell.compareTo(null);
         });
 
         assertEquals(0, cell.compareTo(cell3));
         assertEquals(1, cell.compareTo(cell2));
         assertEquals(-1, cell2.compareTo(cell));
+    }
+
+    @Test
+    void setPreviousStateTest() {
+        GameOfLifeCell cell = new GameOfLifeCell(true, new Locale("pl"));
+
+        cell.setPreviousState();
+        assertTrue(cell.getCellValue());
+
+        cell.updateState(false);
+        assertFalse(cell.getCellValue());
+
+        cell.setPreviousState();
+        assertTrue(cell.getCellValue());
     }
 }

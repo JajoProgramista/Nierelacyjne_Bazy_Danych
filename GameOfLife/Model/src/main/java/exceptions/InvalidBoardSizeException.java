@@ -1,9 +1,9 @@
-package GameOfLifeExceptions;
+package exceptions;
 
-public class FileException extends RuntimeException {
+public class InvalidBoardSizeException extends RuntimeException {
     private final String messageKey;
 
-    public FileException(String messageKey) {
+    public InvalidBoardSizeException(String messageKey) {
         super(messageKey);
         this.messageKey = messageKey;
     }

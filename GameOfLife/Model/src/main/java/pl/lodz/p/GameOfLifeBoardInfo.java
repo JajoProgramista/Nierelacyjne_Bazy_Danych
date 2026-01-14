@@ -6,7 +6,7 @@
 
 package pl.lodz.p;
 
-import GameOfLifeExceptions.NoneLineException;
+import exceptions.NoneLineException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -29,6 +29,7 @@ public abstract class GameOfLifeBoardInfo implements PropertyChangeListener, Clo
     /**
      * Konstruktor inicjalizujący określoną linie.
      * @param line wiersz lub kolumna planszy, tablica komórek GameOfLifeCell.
+     * @param locale lokalizacja (pl / en).
      * @throws NoneLineException kiedy podana linia jest nullem.
      */
     public GameOfLifeBoardInfo(List<GameOfLifeCell> line, Locale locale) {

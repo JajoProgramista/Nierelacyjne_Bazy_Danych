@@ -6,8 +6,8 @@
 
 package pl.lodz.p;
 
-import GameOfLifeExceptions.InvalidBoardSizeException;
-import GameOfLifeExceptions.NullException;
+import exceptions.InvalidBoardSizeException;
+import exceptions.NullException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -36,8 +36,11 @@ public class GameOfLifeBoard implements Cloneable {
      * @param width ilość kolumn planszy
      * @param d gęstość komórek
      * @param simulationType typ symulacji jako klasa interfejsu GameOfLifeSimulator
+     * @param locale lokalizacja (pl / en)
      * @throws NullPointerException jeżeli typ symulacji będzie nullem
      * @throws IndexOutOfBoundsException jeżeli wiersz lub kolumna < 1
+     * @throws InvalidBoardSizeException jeżeli wysokość lub szerokość < 3 i > 25
+     * @throws NullException kiedy typ symulacji jest nullem
      */
     public GameOfLifeBoard(int height, int width, DensityLevel d, GameOfLifeSimulator simulationType,
                            Locale locale) {
@@ -45,12 +48,12 @@ public class GameOfLifeBoard implements Cloneable {
         this.locale = locale;
         bundle = ResourceBundle.getBundle("exceptions", locale);
 
-        if (height < 1) {
+        if (height < 3 || height > 25) {
             logger.severe(bundle.getString("outOfBoundsHeight"));
             throw new InvalidBoardSizeException(bundle.getString("outOfBoundsHeight"));
         }
 
-        if (width < 1) {
+        if (width < 3 || width > 25) {
             logger.severe(bundle.getString("outOfBoundsWidth"));
             throw new InvalidBoardSizeException(bundle.getString("outOfBoundsWidth"));
         }
@@ -72,7 +75,6 @@ public class GameOfLifeBoard implements Cloneable {
         this.simulationType = simulationType;
 
         board = new GameOfLifeCell[height][width];
-        Random r = new Random();
 
         int k = 1;
         for (int i = 0; i < height; i++) {
@@ -86,7 +88,7 @@ public class GameOfLifeBoard implements Cloneable {
             }
         }
 
-        List<GameOfLifeCell> tempList = new ArrayList<GameOfLifeCell>();
+        List<GameOfLifeCell> tempList = new ArrayList<>();
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 tempList.add(board[i][j]);
@@ -205,6 +207,7 @@ public class GameOfLifeBoard implements Cloneable {
      * @param x wiersz planszy
      * @return obiekt GameOfLifeRow, wiersz planszy
      * @throws ArrayIndexOutOfBoundsException kiedy podany index wiersza jest nieprawidłowy
+     * @throws InvalidBoardSizeException kiedy index wiersza jest nieprawidłowy
      */
     public GameOfLifeRow getRow(int x) {
         if (x < 0 || x >= board.length) {
@@ -225,6 +228,7 @@ public class GameOfLifeBoard implements Cloneable {
      * @param y kolumna planszy
      * @return obiekt GameOfLifeRow, kolumna planszy
      * @throws ArrayIndexOutOfBoundsException kiedy podany index kolumny jest nieprawidłowy
+     * @throws InvalidBoardSizeException kiedy index kolumny jest nieprawidłowy
      */
     public GameOfLifeColumn getColumn(int y) {
         if (y < 0 || y >= board[0].length) {

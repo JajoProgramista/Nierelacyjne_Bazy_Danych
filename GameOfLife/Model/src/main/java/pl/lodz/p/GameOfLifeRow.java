@@ -13,6 +13,7 @@ public class GameOfLifeRow extends GameOfLifeBoardInfo {
     /**
      * Konstruktor inicjalizujący określony wiersz.
      * @param line wiersz planszy, tablica komórek GameOfLifeCell.
+     * @param locale lokalizacja (pl / en).
      */
     public GameOfLifeRow(List<GameOfLifeCell> line, Locale locale) {
         super(line, locale);

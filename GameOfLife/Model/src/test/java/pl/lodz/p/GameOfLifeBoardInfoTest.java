@@ -6,8 +6,8 @@
 
 package pl.lodz.p;
 
-import GameOfLifeExceptions.InvalidBoardSizeException;
-import GameOfLifeExceptions.NoneLineException;
+import exceptions.InvalidBoardSizeException;
+import exceptions.NoneLineException;
 import org.junit.jupiter.api.Test;
 
 import java.beans.PropertyChangeEvent;

@@ -6,16 +6,18 @@
 
 package pl.lodz.p;
 
-import GameOfLifeExceptions.InvalidBoardSizeException;
-import GameOfLifeExceptions.NullException;
+import exceptions.InvalidBoardSizeException;
+import exceptions.NullException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -77,14 +79,32 @@ class GameOfLifeBoardTest {
     @Test
     void invalidBoardSizeConstructorTest() {
         assertThrows(InvalidBoardSizeException.class, () -> {
-            GameOfLifeBoard game = new GameOfLifeBoard(0, 1, DensityLevel.HIGH, new PlainGameOfLifeSimulator(),
+            GameOfLifeBoard game = new GameOfLifeBoard(2, 5, DensityLevel.HIGH, new PlainGameOfLifeSimulator(),
                     new Locale("en"));
         });
 
         assertThrows(InvalidBoardSizeException.class, () -> {
-            GameOfLifeBoard game = new GameOfLifeBoard(1, 0, DensityLevel.HIGH, new PlainGameOfLifeSimulator(),
+            GameOfLifeBoard game = new GameOfLifeBoard(26, 5, DensityLevel.HIGH, new PlainGameOfLifeSimulator(),
                     new Locale("en"));
         });
+
+        assertThrows(InvalidBoardSizeException.class, () -> {
+            GameOfLifeBoard game = new GameOfLifeBoard(5, 26, DensityLevel.HIGH, new PlainGameOfLifeSimulator(),
+                    new Locale("en"));
+        });
+
+        assertThrows(InvalidBoardSizeException.class, () -> {
+            GameOfLifeBoard game = new GameOfLifeBoard(5, 2, DensityLevel.HIGH, new PlainGameOfLifeSimulator(),
+                    new Locale("en"));
+        });
+
+        try {
+            GameOfLifeBoard game = new GameOfLifeBoard(0, 1, DensityLevel.HIGH, new PlainGameOfLifeSimulator(),
+                    new Locale("en"));
+        } catch (InvalidBoardSizeException e) {
+            ResourceBundle bundle = ResourceBundle.getBundle("exceptions", new Locale("en"));
+            assertSame(bundle.getString("outOfBoundsHeight"), e.getMessageKey());
+        }
     }
 
     @Test
@@ -367,5 +387,20 @@ class GameOfLifeBoardTest {
         assertFalse(isCellsTheSame);
         assertFalse(isNeighboursTheSame);
         assertFalse(isNeigboursCopyNull);
+    }
+
+    @Test
+    void reverseCellValueTest() {
+        GameOfLifeBoard game = new GameOfLifeBoard(3,3, DensityLevel.LOW, new PlainGameOfLifeSimulator(),
+                new Locale("pl"));
+        game.setCell(0, 0, true);
+        assertTrue(game.getCell(0, 0));
+        game.reverseCellValue(0, 0);
+        assertFalse(game.getCell(0, 0));
+
+        game.setCell(1, 1, false);
+        assertFalse(game.getCell(1, 1));
+        game.reverseCellValue(1, 1);
+        assertTrue(game.getCell(1, 1));
     }
 }

@@ -56,7 +56,7 @@ class FileGameOfLifeDaoFactoryTest {
         FileGameOfLifeDaoFactory d1 =
                 (FileGameOfLifeDaoFactory) GameOfLifeBoardDaoFactory.getFileDao("nieIstnieje.txt",
                         new Locale("pl"));
-        assertThrows(GameOfLifeExceptions.FileException.class, () -> {
+        assertThrows(exceptions.FileException.class, () -> {
             d1.read();
         });
     }
