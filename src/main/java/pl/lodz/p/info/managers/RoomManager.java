@@ -1,6 +1,5 @@
 package pl.lodz.p.info.managers;
 
-import pl.lodz.p.info.infrastructure.adapter.JpaRoomRepositoryAdapter;
 import pl.lodz.p.info.model.Rent;
 import pl.lodz.p.info.model.Room;
 import pl.lodz.p.info.repositories.RoomRepository;
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class RoomManager {
-    private final RoomRepository roomRepository = new JpaRoomRepositoryAdapter();
+    private final RoomRepository roomRepository = new RoomRepository();
 
     public Room getRoom(int number) {
         return roomRepository.findByNumber(number);

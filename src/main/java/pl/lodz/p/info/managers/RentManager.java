@@ -1,6 +1,5 @@
 package pl.lodz.p.info.managers;
 
-import pl.lodz.p.info.infrastructure.adapter.JpaRentRepositoryAdapter;
 import pl.lodz.p.info.model.Client;
 import pl.lodz.p.info.model.Crystal;
 import pl.lodz.p.info.model.Emerald;
@@ -14,7 +13,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class RentManager {
-    private final RentRepository currentRents = new JpaRentRepositoryAdapter();
+    private final RentRepository currentRents = new RentRepository();
+    private final RentRepository archiveRents = new RentRepository();
 
     public List<Rent> getClientRents(Client client) {
         return currentRents.findBy(rent -> rent.getClient().getPersonalId().equals(client.getPersonalId()));

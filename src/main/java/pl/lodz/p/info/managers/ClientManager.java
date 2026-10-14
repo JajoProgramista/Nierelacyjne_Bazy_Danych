@@ -1,6 +1,5 @@
 package pl.lodz.p.info.managers;
 
-import pl.lodz.p.info.infrastructure.adapter.JpaClientRepositoryAdapter;
 import pl.lodz.p.info.model.Address;
 import pl.lodz.p.info.model.Client;
 import pl.lodz.p.info.repositories.ClientRepository;
@@ -8,10 +7,10 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class ClientManager {
-    private final ClientRepository clientRepository = new JpaClientRepositoryAdapter();
+    private final ClientRepository clientRepository = new ClientRepository();
 
     public Client getClient(String personalID) {
-        return clientRepository.findByPersonalId(personalID).orElse(null);
+        return clientRepository.findByPersonalId(personalID);
     }
 
     public Client registerClient(String firstName, String lastName, String personalID, Address address, String login, String password) {
@@ -20,7 +19,7 @@ public class ClientManager {
             return ptr;
         }
         Client nowy = new Client(firstName, lastName, personalID, address, login, password);
-        clientRepository.save(nowy);
+        clientRepository.add(nowy);
         return nowy;
     }
 
