@@ -6,6 +6,7 @@ import pl.lodz.p.info.model.Client;
 import pl.lodz.p.info.repositories.ClientRepository;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class ClientManager {
     private final ClientRepository clientRepository = new JpaClientRepositoryAdapter();
@@ -32,7 +33,9 @@ public class ClientManager {
     }
 
     public List<Client> findClients(Predicate<Client> predicate) {
-        return clientRepository.findBy(client -> predicate.test(client) && !client.isArchive());
+        return clientRepository.findAll().stream()
+                .filter(client -> predicate.test(client) && !client.isArchive())
+                .collect(Collectors.toList());
     }
 
     public List<Client> findAllClients() {

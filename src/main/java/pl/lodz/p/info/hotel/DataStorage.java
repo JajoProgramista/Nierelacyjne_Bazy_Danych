@@ -98,7 +98,6 @@ public class DataStorage {
                 return Files.readAllLines(Paths.get(path));
             }
         } catch (IOException e) {
-            // Zwraca pusta liste, jesli wystapi blad
         }
         return new ArrayList<>();
     }

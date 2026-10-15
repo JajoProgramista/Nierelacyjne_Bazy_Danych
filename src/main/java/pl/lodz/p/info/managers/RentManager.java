@@ -12,33 +12,44 @@ import pl.lodz.p.info.repositories.RentRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class RentManager {
-    private final RentRepository currentRents = new JpaRentRepositoryAdapter();
+    private final RentRepository rentRepository = new JpaRentRepositoryAdapter();
+    private final ClientManager clientManager = new ClientManager();
 
     public List<Rent> getClientRents(Client client) {
-        return currentRents.findBy(rent -> rent.getClient().getPersonalId().equals(client.getPersonalId()));
+        return rentRepository.findAll().stream()
+                .filter(rent -> rent.getClient().getPersonalId().equals(client.getPersonalId())
+                        && !rent.getIsCanceled()
+                        && rent.getEndDate().isAfter(LocalDateTime.now()))
+                .collect(Collectors.toList());
     }
 
     public Rent getRoomRents(Room room) {
-        List<Rent> result = currentRents.findBy(rent -> rent.getRoom().getNumber() == room.getNumber());
-        if (result.isEmpty()) return null;
-        return result.get(0);
+        return rentRepository.findAll().stream()
+                .filter(rent -> rent.getRoom().getNumber() == room.getNumber()
+                        && !rent.getIsCanceled()
+                        && rent.getEndDate().isAfter(LocalDateTime.now()))
+                .findFirst()
+                .orElse(null);
     }
 
     public List<Rent> findRents(Predicate<Rent> predicate) {
-        return currentRents.findBy(predicate);
+        return rentRepository.findAll().stream()
+                .filter(predicate)
+                .collect(Collectors.toList());
     }
 
     public List<Rent> findAllRents() {
-        return currentRents.findAll();
+        return rentRepository.findAll().stream()
+                .filter(rent -> !rent.getIsCanceled() && rent.getEndDate().isAfter(LocalDateTime.now()))
+                .collect(Collectors.toList());
     }
 
     public double checkClientRentBalance(Client client) {
         double balance = 0;
-        List<Rent> clientArchiveRents = archiveRents.findBy(rent ->
-                rent.getClient().getPersonalId().equals(client.getPersonalId()) && !rent.getIsCanceled()
-        );
+        List<Rent> clientArchiveRents = getClientArchiveRents(client);
         for (Rent rent : clientArchiveRents) {
             balance += rent.getRentCost();
         }
@@ -50,7 +61,10 @@ public class RentManager {
             throw new IllegalStateException("Client is archive");
         }
 
-        List<Rent> currentRentsForRoom = currentRents.findBy(rent -> rent.getRoom().getNumber() == room.getNumber());
+        List<Rent> currentRentsForRoom = rentRepository.findAll().stream()
+                .filter(rent -> rent.getRoom().getNumber() == room.getNumber() && !rent.getIsCanceled())
+                .collect(Collectors.toList());
+
         boolean isOK = true;
 
         for (Rent rent : currentRentsForRoom) {
@@ -66,20 +80,25 @@ public class RentManager {
             throw new IllegalStateException("The room has been already rented.");
         }
 
-        int newRentId = archiveRents.size() + currentRents.size() + 1;
+        // Poprawne wyliczanie unikalnego Business ID
+        int newRentId = rentRepository.findAll().stream()
+                .mapToInt(Rent::getId)
+                .max()
+                .orElse(0) + 1;
+
         Rent ptr = new Rent(newRentId, beginDate, endDate, room, client);
-        currentRents.add(ptr);
+        rentRepository.save(ptr);
         return ptr;
     }
 
     public void returnRoom(Room room) {
         Rent ptr = getRoomRents(room);
         if (ptr == null) {
-            throw new IllegalArgumentException("Rent does not exist");
+            throw new IllegalArgumentException("Rent does not exist or has already been ended");
         }
         ptr.endRent();
-        currentRents.remove(ptr);
-        archiveRents.add(ptr);
+        rentRepository.save(ptr);
+
         changeClientType(ptr.getClient());
     }
 
@@ -97,14 +116,22 @@ public class RentManager {
         if (balance >= 100000) {
             client.setClientType(new Emerald());
         }
+
+        clientManager.registerClient(client.getFirstName(), client.getLastName(), client.getPersonalId(),
+                client.getAddress(), client.getLogin(), client.getPassword());
     }
 
     public List<Rent> getClientArchiveRents(Client client) {
-        return archiveRents.findBy(rent -> rent.getClient().getPersonalId().equals(client.getPersonalId()));
+        return rentRepository.findAll().stream()
+                .filter(rent -> rent.getClient().getPersonalId().equals(client.getPersonalId())
+                        && !rent.getIsCanceled()
+                        && rent.getEndDate().isBefore(LocalDateTime.now()))
+                .collect(Collectors.toList());
     }
 
     public void autoReturnRooms() {
-        for (Rent rent : currentRents.findAll()) {
+        List<Rent> currentRents = findAllRents();
+        for (Rent rent : currentRents) {
             if (rent.getEndDate().isBefore(LocalDateTime.now())) {
                 returnRoom(rent.getRoom());
             }
@@ -112,20 +139,17 @@ public class RentManager {
     }
 
     public void deleteRent(Rent rent) {
-        currentRents.remove(rent);
         rent.setIsCanceled(true);
-        archiveRents.add(rent);
+        rentRepository.save(rent);
     }
 
     public void addRent(Rent rent, boolean current) {
-        if (current) {
-            currentRents.add(rent);
-        } else {
-            archiveRents.add(rent);
-        }
+        rentRepository.save(rent);
     }
 
     public List<Rent> findAllArchiveRents() {
-        return archiveRents.findAll();
+        return rentRepository.findAll().stream()
+                .filter(rent -> !rent.getIsCanceled() && rent.getEndDate().isBefore(LocalDateTime.now()))
+                .collect(Collectors.toList());
     }
 }

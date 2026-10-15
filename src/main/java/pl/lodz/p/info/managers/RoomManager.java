@@ -8,12 +8,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class RoomManager {
     private final RoomRepository roomRepository = new JpaRoomRepositoryAdapter();
 
     public Room getRoom(int number) {
-        return roomRepository.findByNumber(number);
+        return roomRepository.findByNumber(number).orElse(null);
     }
 
     public Room registerRoom(int number, int capacity, double basePrice) {
@@ -22,12 +23,14 @@ public class RoomManager {
             return ptr;
         }
         Room nowy = new Room(number, capacity, basePrice);
-        roomRepository.add(nowy);
+        roomRepository.save(nowy);
         return nowy;
     }
 
     public List<Room> findRooms(Predicate<Room> predicate) {
-        return roomRepository.findBy(predicate);
+        return roomRepository.findAll().stream()
+                .filter(predicate)
+                .collect(Collectors.toList());
     }
 
     public List<Room> findAllRooms() {
@@ -60,17 +63,22 @@ public class RoomManager {
 
         List<Rent> allRents = rentManager.findAllRents();
         for (Rent rent : allRents) {
-            if ((endDate.compareTo(rent.getEndDate()) <= 0 && endDate.compareTo(rent.getBeginDate()) > 0) ||
-                    (beginDate.compareTo(rent.getEndDate()) < 0 && beginDate.compareTo(rent.getBeginDate()) >= 0) ||
-                    (endDate.compareTo(rent.getEndDate()) >= 0 && beginDate.compareTo(rent.getBeginDate()) <= 0)) {
-                tabBool[rent.getRoom().getNumber() - 1] = false;
+            if (!rent.getIsCanceled()) {
+                if ((endDate.compareTo(rent.getEndDate()) <= 0 && endDate.compareTo(rent.getBeginDate()) > 0) ||
+                        (beginDate.compareTo(rent.getEndDate()) < 0 && beginDate.compareTo(rent.getBeginDate()) >= 0) ||
+                        (endDate.compareTo(rent.getEndDate()) >= 0 && beginDate.compareTo(rent.getBeginDate()) <= 0)) {
+                    tabBool[rent.getRoom().getNumber() - 1] = false;
+                }
             }
         }
 
         List<Room> availableRooms = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
             if (tabBool[i]) {
-                availableRooms.add(getRoom(i + 1));
+                Room room = getRoom(i + 1);
+                if (room != null) {
+                    availableRooms.add(room);
+                }
             }
         }
 
