@@ -56,6 +56,7 @@ public class JpaRentRepositoryAdapter implements RentRepository {
             RoomEnt roomEnt = em.createQuery(
                             "SELECT r FROM RoomEnt r WHERE r.number = :num", RoomEnt.class)
                     .setParameter("num", rent.getRoom().getNumber())
+                    .setLockMode(jakarta.persistence.LockModeType.OPTIMISTIC_FORCE_INCREMENT)
                     .getResultStream()
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono pokoju o numerze: " + rent.getRoom().getNumber()));
