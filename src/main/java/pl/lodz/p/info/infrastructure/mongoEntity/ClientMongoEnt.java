@@ -11,7 +11,7 @@ public class ClientMongoEnt {
     private String login;
     private String password;
     private AddressMongoEnt address;
-    private String clientTypeLetter;
+    private ClientTypeMongoEnt clientType;
 
     public ClientMongoEnt() {
     }
@@ -72,11 +72,6 @@ public class ClientMongoEnt {
         this.address = address;
     }
 
-    public String getClientTypeLetter() {
-        return clientTypeLetter;
-    }
-
-    public void setClientTypeLetter(String clientTypeLetter) {
-        this.clientTypeLetter = clientTypeLetter;
-    }
+    public ClientTypeMongoEnt getClientType() { return clientType; }
+    public void setClientType(ClientTypeMongoEnt clientType) { this.clientType = clientType; }
 }

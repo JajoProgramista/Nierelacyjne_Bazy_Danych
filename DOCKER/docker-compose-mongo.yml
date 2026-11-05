@@ -4,34 +4,68 @@ services:
   mongo1:
     image: mongo:6.0
     container_name: mongo1
-    command: ["--replSet", "rs0", "--bind_ip_all"]
+    hostname: mongo1
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--port", "27017"]
     ports:
       - "27017:27017"
     healthcheck:
-      test: echo "try { rs.status() } catch (err) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo1:27017'},{_id:1,host:'mongo2:27017'},{_id:2,host:'mongo3:27017'}]}) }" | mongosh --port 27017 --quiet
-      interval: 5s
-      timeout: 10s
-      start_period: 10s
+      test: ["CMD", "mongosh", "--port", "27017", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - mongo1_data:/data/db
 
   mongo2:
     image: mongo:6.0
     container_name: mongo2
-    command: ["--replSet", "rs0", "--bind_ip_all"]
+    hostname: mongo2
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--port", "27018"]
     ports:
-      - "27018:27017"
+      - "27018:27018"
+    healthcheck:
+      test: ["CMD", "mongosh", "--port", "27018", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - mongo2_data:/data/db
 
   mongo3:
     image: mongo:6.0
     container_name: mongo3
-    command: ["--replSet", "rs0", "--bind_ip_all"]
+    hostname: mongo3
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--port", "27019"]
     ports:
-      - "27019:27017"
+      - "27019:27019"
+    healthcheck:
+      test: ["CMD", "mongosh", "--port", "27019", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - mongo3_data:/data/db
+
+  mongoinit:
+    image: mongo:6.0
+    container_name: mongoinit
+    depends_on:
+      mongo1:
+        condition: service_healthy
+      mongo2:
+        condition: service_healthy
+      mongo3:
+        condition: service_healthy
+    command: >
+      mongosh --host mongo1:27017 --eval
+      'rs.initiate({
+        _id: "rs0",
+        members: [
+          {_id: 0, host: "mongo1:27017"},
+          {_id: 1, host: "mongo2:27018"},
+          {_id: 2, host: "mongo3:27019"}
+        ]
+      });'
 
 volumes:
   mongo1_data:

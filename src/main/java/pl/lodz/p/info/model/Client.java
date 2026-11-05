@@ -49,7 +49,9 @@ public class Client {
     }
     public void setLogin(String login) { this.login = login; }
     public void setPassword(String password) { this.password = password; }
-
+    public ClientType getClientType() {
+        return clientType;
+    }
     public double applyDiscount(double price) {
         return clientType.applyDiscount(price);
     }

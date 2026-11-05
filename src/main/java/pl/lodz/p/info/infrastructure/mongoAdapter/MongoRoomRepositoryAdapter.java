@@ -1,9 +1,7 @@
 package pl.lodz.p.info.infrastructure.mongoAdapter;
 
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.ReplaceOptions;
 import pl.lodz.p.info.infrastructure.mongoEntity.RoomMongoEnt;
+import pl.lodz.p.info.infrastructure.repository.MongoRoomRepository;
 import pl.lodz.p.info.model.Room;
 import pl.lodz.p.info.repositories.RoomRepository;
 
@@ -13,28 +11,28 @@ import java.util.Optional;
 
 public class MongoRoomRepositoryAdapter implements RoomRepository {
 
-    private final MongoCollection<RoomMongoEnt> collection;
+    private final MongoRoomRepository repository;
 
     public MongoRoomRepositoryAdapter() {
-        this.collection = MongoDatabaseConnection.getDatabase().getCollection("rooms", RoomMongoEnt.class);
+        this.repository = new MongoRoomRepository();
     }
 
     @Override
     public Optional<Room> findByNumber(int number) {
-        RoomMongoEnt ent = collection.find(Filters.eq("_id", number)).first();
+        RoomMongoEnt ent = repository.findByNumber(number);
         return Optional.ofNullable(mapToDomain(ent));
     }
 
     @Override
     public void save(Room room) {
         RoomMongoEnt ent = mapToMongoEnt(room);
-        collection.replaceOne(Filters.eq("_id", room.getNumber()), ent, new ReplaceOptions().upsert(true));
+        repository.save(ent);
     }
 
     @Override
     public List<Room> findAll() {
         List<Room> rooms = new ArrayList<>();
-        for (RoomMongoEnt ent : collection.find()) {
+        for (RoomMongoEnt ent : repository.findAll()) {
             rooms.add(mapToDomain(ent));
         }
         return rooms;

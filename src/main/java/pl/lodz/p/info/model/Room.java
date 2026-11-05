@@ -4,6 +4,7 @@ public class Room {
     private final int number;
     private final int capacity;
     private double basePrice;
+    private int isRented = 0;
 
     public Room(int number, int capacity, double basePrice) {
         if (number < 0) throw new IllegalArgumentException("Negative room number");
@@ -18,6 +19,8 @@ public class Room {
     public int getNumber() { return number; }
     public int getCapacity() { return capacity; }
     public double getBasePrice() { return basePrice; }
+    public int getIsRented() { return isRented; }
+    public void setIsRented(int isRented) { this.isRented = isRented; }
 
     public void setBasePrice(double basePrice) {
         if (basePrice >= 0) this.basePrice = basePrice;

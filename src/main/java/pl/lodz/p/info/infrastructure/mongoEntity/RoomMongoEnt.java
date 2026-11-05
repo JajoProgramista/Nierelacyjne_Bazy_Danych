@@ -7,6 +7,7 @@ public class RoomMongoEnt {
     private int number;
     private int capacity;
     private double basePrice;
+    private int isRented = 0;
 
     public RoomMongoEnt() {
     }
@@ -34,4 +35,8 @@ public class RoomMongoEnt {
     public void setBasePrice(double basePrice) {
         this.basePrice = basePrice;
     }
+
+    public int getIsRented() { return isRented; }
+
+    public void setIsRented(int isRented) { this.isRented = isRented; }
 }

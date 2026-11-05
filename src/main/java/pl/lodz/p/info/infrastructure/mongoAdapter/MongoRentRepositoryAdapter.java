@@ -1,41 +1,38 @@
 package pl.lodz.p.info.infrastructure.mongoAdapter;
 
+import com.mongodb.MongoCommandException;
+import com.mongodb.MongoWriteException;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.ReplaceOptions;
+import org.bson.Document;
 import org.bson.conversions.Bson;
 import pl.lodz.p.info.infrastructure.mongoEntity.RentMongoEnt;
-import pl.lodz.p.info.model.Client;
-import pl.lodz.p.info.model.Rent;
-import pl.lodz.p.info.model.Room;
-import pl.lodz.p.info.repositories.ClientRepository;
+import pl.lodz.p.info.infrastructure.repository.MongoRentRepository;
+import pl.lodz.p.info.model.*;
 import pl.lodz.p.info.repositories.RentRepository;
-import pl.lodz.p.info.repositories.RoomRepository;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 public class MongoRentRepositoryAdapter implements RentRepository {
 
-    private final MongoCollection<RentMongoEnt> collection;
+    private final MongoRentRepository repository;
     private final MongoClient mongoClient;
-    private final ClientRepository clientRepository;
-    private final RoomRepository roomRepository;
 
     public MongoRentRepositoryAdapter() {
+        this.repository = new MongoRentRepository();
         this.mongoClient = MongoDatabaseConnection.getMongoClient();
-        this.collection = MongoDatabaseConnection.getDatabase().getCollection("rents", RentMongoEnt.class);
-        this.clientRepository = new MongoClientRepositoryAdapter();
-        this.roomRepository = new MongoRoomRepositoryAdapter();
     }
 
     @Override
     public Optional<Rent> findById(int id) {
-        RentMongoEnt ent = collection.find(Filters.eq("_id", id)).first();
-        return Optional.ofNullable(mapToDomain(ent));
+        Document doc = repository.findByIdWithDetails(id);
+        return Optional.ofNullable(mapToDomainFromDocument(doc));
     }
 
     @Override
@@ -43,24 +40,23 @@ public class MongoRentRepositoryAdapter implements RentRepository {
         try (ClientSession session = mongoClient.startSession()) {
             session.startTransaction();
             try {
-                if (!rent.getIsCanceled()) {
-                    Bson query = Filters.and(
-                            Filters.eq("roomNumber", rent.getRoom().getNumber()),
-                            Filters.eq("isCanceled", false),
-                            Filters.lt("beginDate", rent.getEndDate()),
-                            Filters.gt("endDate", rent.getBeginDate()),
-                            Filters.ne("_id", rent.getId())
-                    );
-                    RentMongoEnt existing = collection.find(session, query).first();
+                RentMongoEnt ent = mapToMongoEnt(rent);
+                repository.save(session, ent);
 
-                    if (existing != null) {
-                        throw new IllegalStateException("Naruszenie spójności: Pokój " + rent.getRoom().getNumber() + " jest już wynajęty w tym terminie!");
-                    }
+
+                if (!rent.getIsCanceled() && rent.getRentCost() == 0.0) {
+
+                    repository.incrementRoomRentStatus(session, rent.getRoom().getNumber(), 1);
                 }
 
-                RentMongoEnt ent = mapToMongoEnt(rent);
-                collection.replaceOne(session, Filters.eq("_id", rent.getId()), ent, new ReplaceOptions().upsert(true));
+                else if (rent.getRentCost() > 0.0) {
+                    repository.incrementRoomRentStatus(session, rent.getRoom().getNumber(), -1);
+                }
+
                 session.commitTransaction();
+            } catch (MongoWriteException | MongoCommandException e) {
+                session.abortTransaction();
+                throw new IllegalStateException("Naruszenie spójności: Pokój " + rent.getRoom().getNumber() + " jest już wynajęty!", e);
             } catch (Exception e) {
                 session.abortTransaction();
                 throw e;
@@ -71,8 +67,8 @@ public class MongoRentRepositoryAdapter implements RentRepository {
     @Override
     public List<Rent> findAll() {
         List<Rent> rents = new ArrayList<>();
-        for (RentMongoEnt ent : collection.find()) {
-            Rent r = mapToDomain(ent);
+        for (Document doc : repository.findAllWithDetails()) {
+            Rent r = mapToDomainFromDocument(doc);
             if (r != null) rents.add(r);
         }
         return rents;
@@ -80,22 +76,61 @@ public class MongoRentRepositoryAdapter implements RentRepository {
 
     @Override
     public void delete(Rent rent) {
-        collection.deleteOne(Filters.eq("_id", rent.getId()));
+        repository.delete(rent.getId());
     }
 
-    private Rent mapToDomain(RentMongoEnt ent) {
-        if (ent == null) return null;
+    private Rent mapToDomainFromDocument(Document doc) {
+        if (doc == null) return null;
 
-        Client client = clientRepository.findByPersonalId(ent.getClientPersonalId()).orElse(null);
-        Room room = roomRepository.findByNumber(ent.getRoomNumber()).orElse(null);
+        Document roomDoc = doc.get("roomObj", Document.class);
+        Room room = new Room(
+                roomDoc.getInteger("_id"),
+                roomDoc.getInteger("capacity"),
+                roomDoc.getDouble("basePrice")
+        );
 
-        if (client == null || room == null) return null;
+        Document clientDoc = doc.get("clientObj", Document.class);
+        Document addressDoc = clientDoc.get("address", Document.class);
+        Address address = new Address(
+                addressDoc.getString("city"),
+                addressDoc.getString("postcode"),
+                addressDoc.getString("street"),
+                addressDoc.getString("houseNumber"),
+                addressDoc.getString("apartmentNumber")
+        );
 
-        Rent rent = new Rent(ent.getId(), ent.getBeginDate(), ent.getEndDate(), room, client);
-        rent.setIsCanceled(ent.isCanceled());
-        if (ent.getRentCost() > 0) {
+        Client client = new Client(
+                clientDoc.getString("firstName"),
+                clientDoc.getString("lastName"),
+                clientDoc.getString("_id"),
+                address,
+                clientDoc.getString("login"),
+                clientDoc.getString("password")
+        );
+        client.setArchive(clientDoc.getBoolean("archive", false));
+
+        Document typeDoc = clientDoc.get("clientType", Document.class);
+        String clazz = typeDoc != null ? typeDoc.getString("_clazz") : "default";
+        switch (clazz) {
+            case "silver" -> client.setClientType(new Silver());
+            case "gold" -> client.setClientType(new Gold());
+            case "crystal" -> client.setClientType(new Crystal());
+            case "emerald" -> client.setClientType(new Emerald());
+            default -> client.setClientType(new DefaultClientType());
+        }
+
+        Rent rent = new Rent(
+                doc.getInteger("_id"),
+                convertToLocalDateTime(doc.getDate("beginDate")),
+                convertToLocalDateTime(doc.getDate("endDate")),
+                room,
+                client
+        );
+        rent.setIsCanceled(doc.getBoolean("isCanceled", false));
+        if (doc.getDouble("rentCost") > 0) {
             rent.endRent();
         }
+
         return rent;
     }
 
@@ -107,8 +142,13 @@ public class MongoRentRepositoryAdapter implements RentRepository {
         ent.setEndDate(rent.getEndDate());
         ent.setRentCost(rent.getRentCost());
         ent.setCanceled(rent.getIsCanceled());
-        ent.setClientPersonalId(rent.getClient().getPersonalId());
-        ent.setRoomNumber(rent.getRoom().getNumber());
+        ent.setClientPersonalId(rent.getClient().getPersonalId()); // Zapisujemy tylko klucz obcy
+        ent.setRoomNumber(rent.getRoom().getNumber());             // Zapisujemy tylko klucz obcy
         return ent;
+    }
+
+    private LocalDateTime convertToLocalDateTime(Date date) {
+        if (date == null) return null;
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 }
