@@ -45,10 +45,10 @@ public class MongoRentRepository {
     public Document findByIdWithDetails(int id) {
         List<Bson> pipeline = List.of(
                 Aggregates.match(Filters.eq("_id", id)),
-                Aggregates.lookup("clients", "clientPersonalId", "_id", "clientObj"), // Złączenie z tabelą clients
-                Aggregates.unwind("$clientObj"),                                      // Spłaszczenie wyniku do obiektu
-                Aggregates.lookup("rooms", "roomNumber", "_id", "roomObj"),           // Złączenie z tabelą rooms
-                Aggregates.unwind("$roomObj")                                         // Spłaszczenie
+                Aggregates.lookup("clients", "clientPersonalId", "_id", "clientObj"),
+                Aggregates.unwind("$clientObj"),
+                Aggregates.lookup("rooms", "roomNumber", "_id", "roomObj"),
+                Aggregates.unwind("$roomObj")
         );
         return docCollection.aggregate(pipeline).first();
     }

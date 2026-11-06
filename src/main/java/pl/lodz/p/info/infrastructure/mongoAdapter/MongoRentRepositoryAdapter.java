@@ -142,8 +142,8 @@ public class MongoRentRepositoryAdapter implements RentRepository {
         ent.setEndDate(rent.getEndDate());
         ent.setRentCost(rent.getRentCost());
         ent.setCanceled(rent.getIsCanceled());
-        ent.setClientPersonalId(rent.getClient().getPersonalId()); // Zapisujemy tylko klucz obcy
-        ent.setRoomNumber(rent.getRoom().getNumber());             // Zapisujemy tylko klucz obcy
+        ent.setClientPersonalId(rent.getClient().getPersonalId());
+        ent.setRoomNumber(rent.getRoom().getNumber());
         return ent;
     }
 
