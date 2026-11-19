@@ -1,6 +1,7 @@
 package pl.lodz.p.info.managers;
 
-import pl.lodz.p.info.infrastructure.adapter.JpaRoomRepositoryAdapter;
+import pl.lodz.p.info.infrastructure.mongoAdapter.MongoRoomRepositoryAdapter;
+import pl.lodz.p.info.infrastructure.redisAdapter.RedisRoomRepositoryDecorator;
 import pl.lodz.p.info.model.Rent;
 import pl.lodz.p.info.model.Room;
 import pl.lodz.p.info.repositories.RoomRepository;
@@ -11,7 +12,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class RoomManager {
-    private final RoomRepository roomRepository = new JpaRoomRepositoryAdapter();
+    private final RoomRepository roomRepository = new RedisRoomRepositoryDecorator(new MongoRoomRepositoryAdapter());
 
     public Room getRoom(int number) {
         return roomRepository.findByNumber(number).orElse(null);
