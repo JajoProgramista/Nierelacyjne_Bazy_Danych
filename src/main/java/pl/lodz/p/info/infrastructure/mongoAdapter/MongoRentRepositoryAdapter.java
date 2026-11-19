@@ -43,20 +43,19 @@ public class MongoRentRepositoryAdapter implements RentRepository {
                 RentMongoEnt ent = mapToMongoEnt(rent);
                 repository.save(session, ent);
 
-
                 if (!rent.getIsCanceled() && rent.getRentCost() == 0.0) {
-
                     repository.incrementRoomRentStatus(session, rent.getRoom().getNumber(), 1);
-                }
-
-                else if (rent.getRentCost() > 0.0) {
+                } else if (rent.getIsCanceled() || rent.getRentCost() > 0.0) {
                     repository.incrementRoomRentStatus(session, rent.getRoom().getNumber(), -1);
                 }
 
                 session.commitTransaction();
             } catch (MongoWriteException | MongoCommandException e) {
                 session.abortTransaction();
-                throw new IllegalStateException("Naruszenie spójności: Pokój " + rent.getRoom().getNumber() + " jest już wynajęty!", e);
+                throw new IllegalStateException(
+                        "Nie udało się zapisać wypożyczenia dla pokoju " + rent.getRoom().getNumber()
+                                + " ( pokój jest już wynajęty lub naruszono więzy bazy).", e
+                );
             } catch (Exception e) {
                 session.abortTransaction();
                 throw e;

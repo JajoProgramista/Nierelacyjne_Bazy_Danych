@@ -47,24 +47,21 @@ public class RedisRoomRepositoryDecorator implements RoomRepository {
             jedis.jsonSet(key, json);
             jedis.expire(key, ROOM_TTL_SECONDS);
         } catch (JedisException e) {
-            System.err.println("[Redis Failover] Błąd zapisu do cache: " + e.getMessage());
+            System.err.println(" Błąd zapisu do cache: " + e.getMessage());
         }
     }
 
     public Optional<Room> getRoomFromCache(int number) {
         try {
             String key = ROOM_KEY_PREFIX + number;
-            Object rawJson = jedis.jsonGet(key);
-            if (rawJson != null) {
-                String jsonStr = rawJson.toString();
-                if (jsonStr.startsWith("[")) {
-                    jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
-                }
-                RoomRedisEnt dto = jsonb.fromJson(jsonStr, RoomRedisEnt.class);
+            RoomRedisEnt dto = jedis.jsonGet(key, RoomRedisEnt.class);
+            if (dto != null) {
                 return Optional.of(mapToDomain(dto));
             }
         } catch (JedisException e) {
-            System.err.println("[Redis Failover] Błąd odczytu z cache, przełączam na MongoDB: " + e.getMessage());
+            System.err.println(" Błąd odczytu z cache, przełączam na MongoDB: " + e.getMessage());
+        } catch (jakarta.json.bind.JsonbException e) {
+            System.err.println(" Błąd deserializacji JSON z cache, pomijam wpis: " + e.getMessage());
         }
         return Optional.empty();
     }
@@ -74,7 +71,7 @@ public class RedisRoomRepositoryDecorator implements RoomRepository {
             jedis.jsonDel(ROOM_KEY_PREFIX + number);
             jedis.jsonDel(ALL_ROOMS_KEY);
         } catch (JedisException e) {
-            System.err.println("[Redis Failover] Błąd unieważniania klucza w Redis: " + e.getMessage());
+            System.err.println(" Błąd unieważniania klucza w Redis: " + e.getMessage());
         }
     }
 
@@ -86,7 +83,7 @@ public class RedisRoomRepositoryDecorator implements RoomRepository {
             }
             jedis.jsonDel(ALL_ROOMS_KEY);
         } catch (JedisException e) {
-            System.err.println("[Redis Failover] Błąd czyszczenia całego cache: " + e.getMessage());
+            System.err.println(" Błąd czyszczenia całego cache: " + e.getMessage());
         }
     }
 
@@ -113,19 +110,29 @@ public class RedisRoomRepositoryDecorator implements RoomRepository {
         try {
             Object rawJson = jedis.jsonGet(ALL_ROOMS_KEY);
             if (rawJson != null) {
-                String jsonStr = rawJson.toString();
+                String jsonStr = rawJson.toString().trim();
                 if (jsonStr.startsWith("[[")) {
-                    jsonStr = jsonStr.substring(1, jsonStr.length() - 1);
+                    RoomRedisEnt[][] nested = jsonb.fromJson(jsonStr, RoomRedisEnt[][].class);
+                    if (nested != null && nested.length > 0 && nested[0] != null) {
+                        List<Room> rooms = new ArrayList<>();
+                        for (RoomRedisEnt dto : nested[0]) {
+                            rooms.add(mapToDomain(dto));
+                        }
+                        return rooms;
+                    }
+                } else if (jsonStr.startsWith("[")) {
+                    RoomRedisEnt[] dtos = jsonb.fromJson(jsonStr, RoomRedisEnt[].class);
+                    if (dtos != null) {
+                        List<Room> rooms = new ArrayList<>();
+                        for (RoomRedisEnt dto : dtos) {
+                            rooms.add(mapToDomain(dto));
+                        }
+                        return rooms;
+                    }
                 }
-                RoomRedisEnt[] dtos = jsonb.fromJson(jsonStr, RoomRedisEnt[].class);
-                List<Room> rooms = new ArrayList<>();
-                for (RoomRedisEnt dto : dtos) {
-                    rooms.add(mapToDomain(dto));
-                }
-                return rooms;
             }
         } catch (JedisException e) {
-            System.err.println("[Redis Failover] Błąd odczytu listy pokoi z Redis, przełączam na MongoDB: " + e.getMessage());
+            System.err.println(" Błąd odczytu listy pokoi z Redis, przełączam na MongoDB: " + e.getMessage());
         }
 
         List<Room> roomsFromDb = decoratedRepository.findAll();
@@ -137,7 +144,7 @@ public class RedisRoomRepositoryDecorator implements RoomRepository {
             jedis.jsonSet(ALL_ROOMS_KEY, jsonb.toJson(dtos));
             jedis.expire(ALL_ROOMS_KEY, ALL_ROOMS_TTL_SECONDS);
         } catch (JedisException e) {
-            System.err.println("[Redis Failover] Błąd zapisu listy pokoi do Redis: " + e.getMessage());
+            System.err.println(" Błąd zapisu listy pokoi do Redis: " + e.getMessage());
         }
 
         return roomsFromDb;

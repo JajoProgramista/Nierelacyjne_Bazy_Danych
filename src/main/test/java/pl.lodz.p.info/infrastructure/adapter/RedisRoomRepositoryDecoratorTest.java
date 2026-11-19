@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import pl.lodz.p.info.infrastructure.redisAdapter.RedisRoomRepositoryDecorator;
+import pl.lodz.p.info.infrastructure.redisAdapter.RoomRedisEnt;
 import pl.lodz.p.info.model.Room;
 import pl.lodz.p.info.repositories.RoomRepository;
 import redis.clients.jedis.JedisPooled;
@@ -30,7 +31,7 @@ class RedisRoomRepositoryDecoratorTest {
     }
 
     @Test
-    void testCacheRoom_ShouldSerializeAndSaveWithTtl() {
+    void testCacheRoom() {
         Room room = new Room(101, 2, 250.0);
 
         decorator.cacheRoom(room);
@@ -40,9 +41,9 @@ class RedisRoomRepositoryDecoratorTest {
     }
 
     @Test
-    void testGetRoomFromCache_WhenPresent_ShouldReturnDeserializedRoom() {
-        String json = "{\"number\":101,\"capacity\":2,\"basePrice\":250.0,\"isRented\":0}";
-        when(jedisMock.jsonGet("room:101")).thenReturn(json);
+    void testGetRoomFromCache() {
+        RoomRedisEnt dto = new RoomRedisEnt(101, 2, 250.0, 0);
+        when(jedisMock.jsonGet("room:101", RoomRedisEnt.class)).thenReturn(dto);
 
         Optional<Room> result = decorator.getRoomFromCache(101);
 
@@ -53,9 +54,9 @@ class RedisRoomRepositoryDecoratorTest {
     }
 
     @Test
-    void testFindByNumber_CacheHit_ShouldNotQueryMongo() {
-        String json = "{\"number\":101,\"capacity\":2,\"basePrice\":250.0,\"isRented\":0}";
-        when(jedisMock.jsonGet("room:101")).thenReturn(json);
+    void testFindByNumber() {
+        RoomRedisEnt dto = new RoomRedisEnt(101, 2, 250.0, 0);
+        when(jedisMock.jsonGet("room:101", RoomRedisEnt.class)).thenReturn(dto);
 
         Optional<Room> result = decorator.findByNumber(101);
 
@@ -65,7 +66,7 @@ class RedisRoomRepositoryDecoratorTest {
     }
 
     @Test
-    void testFindByNumber_CacheMiss_ShouldQueryMongoAndSaveToCache() {
+    void testFindByNumber_CacheMiss() {
         when(jedisMock.jsonGet("room:102")).thenReturn(null);
         Room dbRoom = new Room(102, 3, 300.0);
         when(mongoRepositoryMock.findByNumber(102)).thenReturn(Optional.of(dbRoom));
@@ -80,7 +81,7 @@ class RedisRoomRepositoryDecoratorTest {
     }
 
     @Test
-    void testSave_ShouldPersistInMongoAndInvalidateCache() {
+    void testSave() {
         Room room = new Room(101, 2, 290.0);
 
         decorator.save(room);
@@ -91,7 +92,7 @@ class RedisRoomRepositoryDecoratorTest {
     }
 
     @Test
-    void testFailover_WhenRedisThrowsException_ShouldFallbackToMongo() {
+    void testFailover() {
         when(jedisMock.jsonGet("room:105")).thenThrow(new JedisConnectionException("Connection refused"));
         Room dbRoom = new Room(105, 4, 420.0);
         when(mongoRepositoryMock.findByNumber(105)).thenReturn(Optional.of(dbRoom));
@@ -104,7 +105,7 @@ class RedisRoomRepositoryDecoratorTest {
     }
 
     @Test
-    void testFindAll_Failover_WhenRedisIsDown_ShouldFallbackToMongo() {
+    void testFindAll_Failover() {
         when(jedisMock.jsonGet("rooms:all")).thenThrow(new JedisConnectionException("Redis down"));
         when(mongoRepositoryMock.findAll()).thenReturn(List.of(new Room(1, 2, 200.0)));
 
@@ -112,5 +113,24 @@ class RedisRoomRepositoryDecoratorTest {
 
         assertEquals(1, rooms.size());
         verify(mongoRepositoryMock, times(1)).findAll();
+    }
+    @Test
+    void testInvalidateRoom() {
+        decorator.invalidateRoom(101);
+
+        verify(jedisMock, times(1)).jsonDel("room:101");
+        verify(jedisMock, times(1)).jsonDel("rooms:all");
+    }
+
+    @Test
+    void testInvalidateAll() {
+        when(jedisMock.keys("room:*")).thenReturn(
+                new java.util.LinkedHashSet<>(java.util.List.of("room:101", "room:102"))
+        );
+
+        decorator.invalidateAll();
+
+        verify(jedisMock, times(1)).del("room:101", "room:102");
+        verify(jedisMock, times(1)).jsonDel("rooms:all");
     }
 }

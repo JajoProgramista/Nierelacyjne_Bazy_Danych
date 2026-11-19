@@ -40,7 +40,9 @@ public class MongoRoomRepositoryAdapter implements RoomRepository {
 
     private Room mapToDomain(RoomMongoEnt ent) {
         if (ent == null) return null;
-        return new Room(ent.getNumber(), ent.getCapacity(), ent.getBasePrice());
+        Room room = new Room(ent.getNumber(), ent.getCapacity(), ent.getBasePrice());
+        room.setIsRented(ent.getIsRented());
+        return room;
     }
 
     private RoomMongoEnt mapToMongoEnt(Room room) {
@@ -49,6 +51,7 @@ public class MongoRoomRepositoryAdapter implements RoomRepository {
         ent.setNumber(room.getNumber());
         ent.setCapacity(room.getCapacity());
         ent.setBasePrice(room.getBasePrice());
+        ent.setIsRented(room.getIsRented());
         return ent;
     }
 }

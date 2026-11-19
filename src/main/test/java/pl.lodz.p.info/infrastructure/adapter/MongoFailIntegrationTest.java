@@ -99,7 +99,7 @@ public class MongoFailIntegrationTest {
         Optional<Room> roomBefore = roomRepository.findByNumber(101);
         assertTrue(roomBefore.isPresent());
 
-        System.out.println(">>> WYŁĄCZAMY WĘZEŁ PRIMARY");
+        System.out.println("WYŁĄCZAMY WĘZEŁ PRIMARY");
         mongo1.stop();
 
         Thread.sleep(6000);
